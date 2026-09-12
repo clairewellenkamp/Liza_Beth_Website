@@ -1,0 +1,871 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Books — Liza Beth</title>
+<meta name="description" content="The Fall Before Flight, Book One — by Liza Beth.">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600;700&amp;family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&amp;family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap">
+<style>:root{color-scheme:light}html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<style>
+/* Liza Beth — brand stylesheet. Verbatim from claude/author-site-css.md (brand kit v1.1).
+   Palette: Bag End · Blue Door. Neutral-forward: canvas + surface carry ~85% of every page;
+   color appears in small, repeated doses only. Do not add a sixth color. */
+:root{
+  /* Brand palette — the ten kit tokens, verbatim */
+  --canvas:#FBF6EC;      /* page background, cover mats, text on colored fills */
+  --surface:#F3EEDF;     /* alternating section bands, footer */
+  --ink:#33372C;         /* headings, body text */
+  --muted:#656957;       /* secondary text, excerpts, metadata */
+  --green:#5A7A4E;       /* buttons, eyebrow labels */
+  --blue:#2C5A85;        /* links, nav CTA */
+  --clay:#C97B4A;        /* rules, borders, decorative fills — NOT text */
+  --clay-deep:#9F5629;   /* the text version of clay */
+  --gold:#F0C244;        /* nav underline, small sparks — NEVER text */
+  --line:#E3DAC4;        /* borders, dividers, card edges */
+
+  /* Working derivations — hover states, quiet tints, hairlines. No new hues. */
+  --ink-faint:#8E927E;
+  --green-deep:#47613D;--green-quiet:#E6EBE0;
+  --blue-deep:#1F4364;--blue-quiet:#DEE6EE;
+  --clay-quiet:#F6E3D6;
+  --gold-quiet:#FCEFC9;
+  --line-strong:#CFC2A4;
+
+  /* Semantic aliases — what components reference */
+  --bg:var(--canvas);
+  --bg-sunk:var(--surface);
+  --surface-raised:var(--canvas);
+  --surface-inset:var(--surface);
+  --text:var(--ink);
+  --text-soft:var(--muted);
+  --text-faint:var(--ink-faint);
+  --text-inverse:var(--canvas);
+  --link:var(--blue);
+  --link-hover:var(--blue-deep);
+  --accent:var(--green);
+  --accent-hover:var(--green-deep);
+  --accent-quiet:var(--green-quiet);
+  --gilt:var(--gold);
+  --gilt-quiet:var(--gold-quiet);
+  --rule:var(--line);
+  --rule-strong:var(--line-strong);
+  --focus-ring:var(--blue);
+
+  /* Status — drawn from the same five colors; text roles never use clay or gold */
+  --ok:var(--green-deep);--ok-quiet:var(--green-quiet);
+  --warn:var(--clay-deep);--warn-quiet:var(--gold-quiet);
+  --danger:#8A3A22;--danger-quiet:var(--clay-quiet);
+  --info:var(--blue);--info-quiet:var(--blue-quiet);
+
+  /* Compatibility ramps — pre-kit primitive names, remapped onto the kit palette. */
+  --paper-0:var(--canvas);--paper-1:var(--surface);--paper-2:var(--canvas);
+  --paper-3:var(--surface);--paper-4:var(--line);
+  --ink-0:var(--ink);--ink-1:#43473A;--ink-2:var(--muted);--ink-3:var(--ink-faint);--ink-4:#B0B3A2;
+  --cream-0:var(--canvas);--cream-1:var(--surface);
+  --gold-deep:var(--clay-deep);--gold-lit:#F5D278;--gold-pale:var(--gold-quiet);
+  --teal-deep:var(--blue-deep);--teal:var(--blue);--teal-lit:#5C88AE;--teal-pale:var(--blue-quiet);
+  --brick-deep:#7E4420;--brick:var(--clay-deep);--brick-lit:var(--clay);--brick-pale:var(--clay-quiet);
+
+  /* Legacy dark-ground names. No dark theme: a dark palette must be designed
+     deliberately, never inverted from this warm light ground. */
+  --night-0:var(--surface);--night-1:var(--surface);--night-2:var(--line);--night-3:var(--line-strong);
+}
+
+/* `data-theme="night"` sections render as `surface` bands — rhythm without color. */
+[data-theme="night"]{--bg:var(--surface);--bg-sunk:var(--canvas);--surface-raised:var(--canvas);--surface-inset:var(--canvas);--text:var(--ink);--text-soft:var(--muted);--text-inverse:var(--canvas);--rule:var(--line)}
+
+:root{
+  --font-display:'Spectral',Georgia,'Times New Roman',serif;
+  --font-subtitle:'Crimson Pro',Georgia,serif;
+  --font-body:'Source Sans 3',Arial,Helvetica,sans-serif;
+
+  --weight-display:600;
+  --weight-subtitle:500;
+  --weight-body:400;
+  --weight-bold:700;
+
+  --size-h1:clamp(2.5rem,5vw,3.5rem);
+  --size-h2:clamp(1.75rem,3vw,2.25rem);
+  --size-h3:1.35rem;
+  --size-tagline:1.25rem;
+  --size-body:1rem;
+  --size-ui:0.9rem;
+  --size-caption:0.85rem;
+  --size-eyebrow:0.85rem;
+
+  --leading-h1:1.05;
+  --leading-h2:1.15;
+  --leading-h3:1.2;
+  --leading-tagline:1.5;
+  --leading-body:1.7;
+  --leading-ui:1;
+  --leading-caption:1.5;
+
+  --tracking-eyebrow:0.08em;
+  --tracking-ui:0.02em;
+  --tracking-normal:normal;
+
+  --measure:64ch;
+  --measure-tight:46ch;
+}
+
+:root{
+  --space-0:0;
+  --space-1:4px;
+  --space-2:8px;
+  --space-3:12px;
+  --space-4:16px;
+  --space-5:24px;
+  --space-6:32px;
+  --space-7:48px;
+  --space-8:64px;
+  --space-9:96px;
+  --space-10:128px;
+
+  --gutter:var(--space-5);
+  --page-pad:var(--space-6);
+  --section-gap:var(--space-9);
+  --container:1160px;
+  --container-prose:720px;
+}
+
+:root{
+  --radius-0:0;
+  --radius-sm:2px;
+  --radius-md:4px;
+  --radius-lg:8px;
+  --radius-xl:14px;
+  --radius-pill:999px;
+  --radius-card:var(--radius-lg);
+  --radius-control:var(--radius-md);
+}
+
+:root{
+  --shadow-0:none;
+  --shadow-1:0 1px 2px rgba(38,32,26,.07);
+  --shadow-2:0 2px 6px rgba(38,32,26,.09),0 1px 1px rgba(38,32,26,.05);
+  --shadow-3:0 8px 22px rgba(38,32,26,.12),0 2px 4px rgba(38,32,26,.06);
+  --shadow-4:0 20px 48px rgba(38,32,26,.18),0 4px 8px rgba(38,32,26,.08);
+  --shadow-inset:inset 0 1px 2px rgba(38,32,26,.10);
+  --shadow-gilt:0 0 0 1px var(--gilt-quiet);
+  --border-hair:1px solid var(--rule);
+  --border-strong:1px solid var(--rule-strong);
+  --border-gilt:1px solid var(--gilt);
+}
+
+:root{
+  --dur-fast:120ms;
+  --dur:180ms;
+  --dur-slow:320ms;
+  --dur-page:520ms;
+  --ease:cubic-bezier(.2,.6,.3,1);
+  --ease-out:cubic-bezier(0,0,.25,1);
+  --ease-in-out:cubic-bezier(.4,0,.2,1);
+  --transition-control:background-color var(--dur) var(--ease),border-color var(--dur) var(--ease),color var(--dur) var(--ease),box-shadow var(--dur) var(--ease);
+}
+@media (prefers-reduced-motion:reduce){:root{--dur-fast:1ms;--dur:1ms;--dur-slow:1ms;--dur-page:1ms}}
+
+/* Minimal element defaults so plain HTML picks up the brand. */
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body);font-weight:var(--weight-body);font-size:var(--size-body);line-height:var(--leading-body);-webkit-font-smoothing:antialiased;text-wrap:pretty}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:var(--weight-display);color:var(--text);margin:0 0 var(--space-4)}
+h1{font-size:var(--size-h1);line-height:var(--leading-h1)}
+h2{font-size:var(--size-h2);line-height:var(--leading-h2)}
+h3{font-size:var(--size-h3);line-height:var(--leading-h3)}
+p{margin:0 0 var(--space-4);max-width:var(--measure)}
+strong,b{font-weight:var(--weight-bold)}
+small{font-size:var(--size-caption);line-height:var(--leading-caption)}
+a{color:var(--link);text-decoration-thickness:1px;text-underline-offset:2px;transition:color var(--dur) var(--ease)}
+a:hover{color:var(--link-hover)}
+hr{border:0;border-top:var(--border-hair);margin:var(--space-6) 0}
+blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--weight-subtitle);font-size:var(--size-tagline);line-height:var(--leading-tagline);color:var(--text-soft);margin:var(--space-5) 0;padding-left:var(--space-5);border-left:2px solid var(--gilt)}
+:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}
+::selection{background:var(--gilt-quiet);color:var(--ink-0)}
+.eyebrow{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--weight-subtitle);font-size:var(--size-eyebrow);letter-spacing:var(--tracking-eyebrow);text-transform:uppercase;color:var(--text-soft)}
+.tagline{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--weight-subtitle);font-size:var(--size-tagline);line-height:var(--leading-tagline);color:var(--text-soft)}
+
+/* ---- Icon ---- */
+.lb-icon{display:inline-block;flex:none;background-color:currentColor;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;-webkit-mask-size:contain;mask-size:contain}
+
+/* ---- Brand mark (LB dragon monogram) — applied as a MASK, never an <img>. ---- */
+.lb-mark{display:inline-block;flex:none;width:auto;aspect-ratio:1998/2729;background-color:currentColor;
+  -webkit-mask:url("data:image/png;base64,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") no-repeat center/contain;mask:url("data:image/png;base64,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") no-repeat center/contain}
+.lb-mark--sm{height:36px}
+.lb-mark--md{height:48px}
+.lb-mark--lg{height:104px}
+
+/* ---- Lockup: mark + wordmark, the standard brand signature ---- */
+.lb-lockup{display:inline-flex;align-items:center;gap:var(--space-4);text-decoration:none;color:var(--text)}
+.lb-lockup .lb-mark{color:var(--ink)}
+.lb-lockup--gilt .lb-mark{color:var(--clay-deep)}
+.lb-lockup--stacked{flex-direction:column;align-items:flex-start;gap:var(--space-4)}
+
+/* ---- Wordmark ---- */
+.lb-wordmark{font-family:var(--font-display);font-weight:var(--weight-display);line-height:1;letter-spacing:-.01em;display:inline-flex;flex-direction:column;gap:.28em;text-decoration:none;color:var(--text)}
+.lb-wordmark__sub{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--weight-subtitle);font-size:.3em;letter-spacing:var(--tracking-eyebrow);text-transform:uppercase;color:var(--text-soft)}
+.lb-wordmark--gilt .lb-wordmark__name{color:var(--clay-deep)}
+
+/* ---- Button ---- */
+.lb-btn{font-family:var(--font-body);font-weight:var(--weight-bold);letter-spacing:var(--tracking-ui);line-height:var(--leading-ui);display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);border-radius:var(--radius-control);border:1px solid transparent;cursor:pointer;text-decoration:none;transition:var(--transition-control),transform var(--dur-fast) var(--ease);white-space:nowrap}
+.lb-btn--sm{font-size:var(--size-caption);padding:8px 14px}
+.lb-btn--md{font-size:var(--size-ui);padding:11px 20px}
+.lb-btn--lg{font-size:1rem;padding:14px 28px}
+.lb-btn:active:not(:disabled){transform:translateY(1px)}
+.lb-btn:disabled{cursor:not-allowed;opacity:.45}
+.lb-btn--primary{background:var(--teal);color:var(--paper-0);box-shadow:var(--shadow-1)}
+.lb-btn--primary:hover:not(:disabled){background:var(--teal-deep)}
+.lb-btn--secondary{background:var(--surface);color:var(--text);border-color:var(--rule-strong);box-shadow:var(--shadow-1)}
+.lb-btn--secondary:hover:not(:disabled){background:var(--surface-inset);border-color:var(--gilt)}
+.lb-btn--ghost{background:transparent;color:var(--text-soft)}
+.lb-btn--ghost:hover:not(:disabled){background:var(--surface-inset);color:var(--text)}
+.lb-btn--gilt{background:var(--gold);color:var(--ink-0);box-shadow:var(--shadow-1)}
+.lb-btn--gilt:hover:not(:disabled){background:var(--gold-deep);color:var(--paper-0)}
+.lb-btn--danger{background:var(--brick);color:var(--paper-0)}
+.lb-btn--danger:hover:not(:disabled){background:var(--brick-deep)}
+.lb-btn--link{background:transparent;color:var(--link);padding-left:0;padding-right:0;text-decoration:underline;text-underline-offset:3px}
+.lb-btn--link:hover:not(:disabled){color:var(--link-hover)}
+.lb-btn--block{width:100%}
+
+/* ---- IconButton ---- */
+.lb-iconbtn{display:inline-flex;align-items:center;justify-content:center;border-radius:var(--radius-control);border:1px solid transparent;background:transparent;color:var(--text-soft);cursor:pointer;transition:var(--transition-control)}
+.lb-iconbtn--sm{width:30px;height:30px}
+.lb-iconbtn--md{width:38px;height:38px}
+.lb-iconbtn--lg{width:46px;height:46px}
+.lb-iconbtn:hover:not(:disabled){background:var(--surface-inset);color:var(--text)}
+.lb-iconbtn:disabled{opacity:.4;cursor:not-allowed}
+.lb-iconbtn--outlined{border-color:var(--rule-strong);background:var(--surface)}
+.lb-iconbtn--outlined:hover:not(:disabled){border-color:var(--gilt)}
+.lb-iconbtn--solid{background:var(--teal);color:var(--paper-0)}
+.lb-iconbtn--solid:hover:not(:disabled){background:var(--teal-deep)}
+
+/* ---- Fields ---- */
+.lb-field{display:flex;flex-direction:column;gap:var(--space-2)}
+.lb-field__label{font-family:var(--font-body);font-weight:var(--weight-bold);font-size:var(--size-ui);letter-spacing:var(--tracking-ui);color:var(--text)}
+.lb-field__hint{font-size:var(--size-caption);line-height:var(--leading-caption);color:var(--text-faint)}
+.lb-field__error{font-size:var(--size-caption);line-height:var(--leading-caption);color:var(--danger);font-weight:var(--weight-bold)}
+.lb-input{font-family:var(--font-body);font-size:var(--size-body);color:var(--text);background:var(--surface);border:1px solid var(--rule-strong);border-radius:var(--radius-control);padding:10px 12px;width:100%;transition:var(--transition-control);box-shadow:var(--shadow-inset)}
+.lb-input::placeholder{color:var(--text-faint)}
+.lb-input:hover:not(:disabled){border-color:var(--ink-3)}
+.lb-input:focus{outline:none;border-color:var(--teal);box-shadow:var(--shadow-inset),0 0 0 3px var(--accent-quiet)}
+.lb-input:disabled{background:var(--surface-inset);color:var(--text-faint);cursor:not-allowed}
+.lb-input--invalid{border-color:var(--danger)}
+.lb-input--invalid:focus{border-color:var(--danger);box-shadow:var(--shadow-inset),0 0 0 3px var(--danger-quiet)}
+.lb-input--textarea{min-height:112px;line-height:var(--leading-body);resize:vertical}
+.lb-select-wrap{position:relative;display:block}
+.lb-select{appearance:none;padding-right:36px;cursor:pointer}
+.lb-select-wrap .lb-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--text-soft)}
+
+/* ---- Checkbox / Radio / Switch ---- */
+.lb-choice{display:inline-flex;align-items:flex-start;gap:var(--space-3);cursor:pointer;font-size:var(--size-body);color:var(--text)}
+.lb-choice input{position:absolute;opacity:0;width:0;height:0}
+.lb-choice__box{flex:none;width:20px;height:20px;margin-top:2px;border:1px solid var(--rule-strong);background:var(--surface);box-shadow:var(--shadow-inset);transition:var(--transition-control);display:grid;place-items:center;color:transparent}
+.lb-choice--check .lb-choice__box{border-radius:var(--radius-sm)}
+.lb-choice--radio .lb-choice__box{border-radius:var(--radius-pill)}
+.lb-choice:hover .lb-choice__box{border-color:var(--gilt)}
+.lb-choice input:checked+.lb-choice__box{background:var(--teal);border-color:var(--teal);color:var(--paper-0)}
+.lb-choice--radio input:checked+.lb-choice__box{background:var(--surface);border-color:var(--teal);box-shadow:inset 0 0 0 5px var(--teal)}
+.lb-choice input:focus-visible+.lb-choice__box{outline:2px solid var(--focus-ring);outline-offset:2px}
+.lb-choice--disabled{opacity:.45;cursor:not-allowed}
+.lb-choice__text{line-height:1.4}
+.lb-choice__desc{display:block;font-size:var(--size-caption);color:var(--text-faint);margin-top:2px}
+.lb-switch{display:inline-flex;align-items:center;gap:var(--space-3);cursor:pointer;font-size:var(--size-body);color:var(--text)}
+.lb-switch input{position:absolute;opacity:0;width:0;height:0}
+.lb-switch__track{flex:none;width:42px;height:24px;border-radius:var(--radius-pill);background:var(--paper-4);border:1px solid var(--rule-strong);position:relative;transition:var(--transition-control)}
+.lb-switch__track::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:var(--radius-pill);background:var(--surface-raised);box-shadow:var(--shadow-1);transition:transform var(--dur) var(--ease)}
+.lb-switch input:checked+.lb-switch__track{background:var(--teal);border-color:var(--teal-deep)}
+.lb-switch input:checked+.lb-switch__track::after{transform:translateX(18px)}
+.lb-switch input:focus-visible+.lb-switch__track{outline:2px solid var(--focus-ring);outline-offset:2px}
+.lb-switch--disabled{opacity:.45;cursor:not-allowed}
+
+/* ---- Card ---- */
+.lb-card{background:var(--surface);border:var(--border-hair);border-radius:var(--radius-card);box-shadow:var(--shadow-2);display:flex;flex-direction:column;transition:box-shadow var(--dur) var(--ease),transform var(--dur) var(--ease),border-color var(--dur) var(--ease);text-decoration:none;color:inherit}
+.lb-card--flat{box-shadow:none;background:var(--surface-inset)}
+.lb-card--gilt{border-color:var(--gilt);box-shadow:var(--shadow-2)}
+.lb-card--interactive{cursor:pointer}
+.lb-card--interactive:hover{box-shadow:var(--shadow-3);transform:translateY(-2px);border-color:var(--gilt)}
+.lb-card__body{padding:var(--space-5);display:flex;flex-direction:column;gap:var(--space-3)}
+.lb-card__title{font-family:var(--font-display);font-weight:var(--weight-display);font-size:var(--size-h3);line-height:var(--leading-h3);margin:0}
+.lb-card__eyebrow{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--weight-subtitle);font-size:var(--size-eyebrow);letter-spacing:var(--tracking-eyebrow);text-transform:uppercase;color:var(--text-soft)}
+.lb-card__text{margin:0;font-size:var(--size-body);line-height:var(--leading-body);color:var(--text-soft);max-width:none}
+.lb-card__footer{padding:var(--space-4) var(--space-5);border-top:var(--border-hair);display:flex;align-items:center;gap:var(--space-3)}
+
+/* ---- Badge ---- */
+.lb-badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-body);font-weight:var(--weight-bold);font-size:.75rem;letter-spacing:var(--tracking-ui);text-transform:uppercase;padding:4px 9px;border-radius:var(--radius-sm);border:1px solid transparent}
+.lb-badge--neutral{background:var(--info-quiet);color:var(--ink-1);border-color:var(--rule)}
+.lb-badge--teal{background:var(--teal-pale);color:var(--teal-deep)}
+.lb-badge--gold{background:var(--gold-pale);color:var(--gold-deep)}
+.lb-badge--brick{background:var(--brick-pale);color:var(--brick-deep)}
+.lb-badge--outline{background:transparent;color:var(--text-soft);border-color:var(--rule-strong)}
+.lb-badge--solid{background:var(--ink-0);color:var(--cream-0)}
+
+/* ---- Tag ---- */
+.lb-tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-body);font-size:var(--size-caption);color:var(--text-soft);background:var(--surface);border:1px solid var(--rule-strong);border-radius:var(--radius-pill);padding:4px 12px;transition:var(--transition-control)}
+.lb-tag--clickable{cursor:pointer}
+.lb-tag--clickable:hover{border-color:var(--gilt);color:var(--text)}
+.lb-tag--selected{background:var(--teal);border-color:var(--teal-deep);color:var(--paper-0)}
+.lb-tag__x{display:inline-flex;cursor:pointer;opacity:.6}
+.lb-tag__x:hover{opacity:1}
+
+/* ---- Tabs ---- */
+.lb-tabs{display:flex;gap:var(--space-5);border-bottom:var(--border-hair)}
+.lb-tab{font-family:var(--font-body);font-weight:var(--weight-bold);font-size:var(--size-ui);letter-spacing:var(--tracking-ui);color:var(--text-faint);background:none;border:0;border-bottom:2px solid transparent;padding:0 0 10px;cursor:pointer;transition:var(--transition-control);display:inline-flex;align-items:center;gap:var(--space-2)}
+.lb-tab:hover{color:var(--text)}
+.lb-tab[aria-selected="true"]{color:var(--text);border-bottom-color:var(--gilt)}
+.lb-tabs--pills{border-bottom:0;gap:var(--space-2)}
+.lb-tabs--pills .lb-tab{border-bottom:0;padding:7px 14px;border-radius:var(--radius-pill)}
+.lb-tabs--pills .lb-tab[aria-selected="true"]{background:var(--ink-0);color:var(--cream-0)}
+
+/* ---- Dialog ---- */
+.lb-dialog__scrim{position:fixed;inset:0;background:rgba(21,17,25,.55);backdrop-filter:blur(2px);display:grid;place-items:center;padding:var(--space-5);z-index:60;animation:lb-fade var(--dur) var(--ease)}
+.lb-dialog{background:var(--surface-raised);border:var(--border-hair);border-top:3px solid var(--gilt);border-radius:var(--radius-lg);box-shadow:var(--shadow-4);width:100%;max-width:480px;animation:lb-rise var(--dur-slow) var(--ease)}
+.lb-dialog__head{padding:var(--space-5) var(--space-5) 0;display:flex;align-items:flex-start;justify-content:space-between;gap:var(--space-4)}
+.lb-dialog__title{font-family:var(--font-display);font-weight:var(--weight-display);font-size:1.5rem;line-height:1.2;margin:0}
+.lb-dialog__body{padding:var(--space-4) var(--space-5);color:var(--text-soft)}
+.lb-dialog__foot{padding:var(--space-4) var(--space-5);border-top:var(--border-hair);display:flex;justify-content:flex-end;gap:var(--space-3)}
+@keyframes lb-fade{from{opacity:0}to{opacity:1}}
+@keyframes lb-rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ---- Toast ---- */
+.lb-toast{display:flex;align-items:flex-start;gap:var(--space-3);background:var(--ink-0);color:var(--cream-0);border-radius:var(--radius-md);box-shadow:var(--shadow-3);padding:var(--space-4);min-width:280px;max-width:400px;border-left:3px solid var(--gilt);animation:lb-rise var(--dur-slow) var(--ease)}
+.lb-toast--success{border-left-color:var(--teal-lit)}
+.lb-toast--error{border-left-color:var(--brick-lit)}
+.lb-toast__title{font-weight:var(--weight-bold);font-size:var(--size-ui);letter-spacing:var(--tracking-ui)}
+.lb-toast__text{font-size:var(--size-caption);line-height:var(--leading-caption);color:var(--ink-4);margin-top:2px}
+
+/* ---- Tooltip ---- */
+.lb-tooltip{position:relative;display:inline-flex}
+.lb-tooltip__bubble{position:absolute;z-index:40;background:var(--ink-0);color:var(--cream-0);font-size:var(--size-caption);line-height:1.35;padding:6px 10px;border-radius:var(--radius-sm);box-shadow:var(--shadow-2);white-space:nowrap;pointer-events:none;opacity:0;transition:opacity var(--dur) var(--ease)}
+.lb-tooltip:hover .lb-tooltip__bubble,.lb-tooltip:focus-within .lb-tooltip__bubble{opacity:1}
+.lb-tooltip__bubble--top{bottom:calc(100% + 8px);left:50%;transform:translateX(-50%)}
+.lb-tooltip__bubble--bottom{top:calc(100% + 8px);left:50%;transform:translateX(-50%)}
+.lb-tooltip__bubble--left{right:calc(100% + 8px);top:50%;transform:translateY(-50%)}
+.lb-tooltip__bubble--right{left:calc(100% + 8px);top:50%;transform:translateY(-50%)}
+
+/* ---- Rule (ornamental divider) ---- */
+.lb-rule{display:flex;align-items:center;gap:var(--space-4);color:var(--gilt)}
+.lb-rule::before,.lb-rule::after{content:"";flex:1;height:1px;background:var(--rule)}
+.lb-rule__mark{font-family:var(--font-display);font-size:.9rem;letter-spacing:.4em;color:var(--gilt)}
+
+/* ============================================================================
+   Liza Beth — site layer.
+   Additions on top of the brand stylesheet. Every value is a kit token.
+   No new colors, no raw hex, no pills except lb-tag / lb-switch.
+   ========================================================================== */
+
+.lb-skip{position:absolute;left:-9999px;top:0;background:var(--canvas);color:var(--text);padding:var(--space-3) var(--space-4);border:var(--border-strong);border-radius:var(--radius-control);z-index:80}
+.lb-skip:focus{left:var(--space-4);top:var(--space-4)}
+
+.lb-wrap{max-width:var(--container);margin:0 auto}
+.lb-wrap--prose{max-width:var(--container-prose);margin:0 auto}
+.lb-section{padding:var(--space-9) var(--space-6)}
+.lb-section--tight{padding:var(--space-8) var(--space-6)}
+.lb-cols{display:flex;gap:var(--space-8);flex-wrap:wrap}
+.lb-cols>*{flex:1 1 320px;min-width:0}
+
+/* ---- Header ---------------------------------------------------------- */
+.lb-header{background:var(--surface);border-bottom:var(--border-hair);padding:var(--space-4) var(--space-6);position:sticky;top:0;z-index:50}
+.lb-header__inner{max-width:var(--container);margin:0 auto;display:flex;align-items:center;gap:var(--space-5);flex-wrap:wrap}
+.lb-nav{display:flex;align-items:center;gap:var(--space-5);margin-left:auto;flex-wrap:wrap}
+.lb-nav__link{font-family:var(--font-body);font-weight:var(--weight-bold);font-size:var(--size-ui);letter-spacing:var(--tracking-ui);color:var(--text-soft);text-decoration:none;padding-bottom:var(--space-1);border-bottom:2px solid transparent;transition:var(--transition-control)}
+.lb-nav__link:hover{color:var(--text)}
+.lb-nav__link[aria-current="page"]{color:var(--text);border-bottom-color:var(--gilt)}
+
+/* ---- Page head ------------------------------------------------------- */
+.lb-pagehead{background:var(--surface);border-bottom:var(--border-hair);padding:var(--space-8) var(--space-6) var(--space-7)}
+.lb-pagehead h1{margin-bottom:var(--space-3)}
+
+/* ---- Hero ------------------------------------------------------------ */
+.lb-hero{background:var(--surface);border-bottom:var(--border-hair);padding:var(--space-9) var(--space-6)}
+.lb-hero__inner{max-width:var(--container);margin:0 auto;display:flex;gap:var(--space-8);flex-wrap:wrap;align-items:center}
+.lb-hero__copy{flex:1 1 380px;min-width:0}
+.lb-hero__art{flex:0 1 360px;min-width:0;display:flex;justify-content:center}
+.lb-hero__art svg{width:100%;height:auto;max-width:360px}
+.lb-hero__actions{display:flex;gap:var(--space-4);flex-wrap:wrap;margin-top:var(--space-6)}
+
+/* ---- Book-shaped navigation cards ------------------------------------
+   Three closed books. Click swings the cover open on its hinge, then the
+   link follows through. Reduced motion skips the swing entirely.          */
+.lb-books{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--space-8) var(--space-7);max-width:920px;margin:0 auto;justify-items:center}
+.lb-book{width:100%;max-width:280px}
+.lb-book.is-open{position:relative;z-index:2}
+.lb-book{display:block;text-decoration:none;color:inherit;perspective:1700px;-webkit-tap-highlight-color:transparent}
+.lb-book__stage{display:block;position:relative;aspect-ratio:1/1.42;transform-style:preserve-3d;transition:transform var(--dur-slow) var(--ease)}
+.lb-book:hover .lb-book__stage,.lb-book:focus-visible .lb-book__stage{transform:translateY(-4px)}
+.lb-book:focus-visible{outline:none}
+.lb-book:focus-visible .lb-book__cover{outline:2px solid var(--focus-ring);outline-offset:3px}
+
+/* The page you see once the cover is open */
+.lb-book__inside{position:absolute;inset:0;background:var(--canvas);border:var(--border-hair);border-radius:var(--radius-sm) var(--radius-card) var(--radius-card) var(--radius-sm);box-shadow:var(--shadow-2);padding:var(--space-6) var(--space-5);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--space-3);text-align:center}
+.lb-book__inside::before{content:"";position:absolute;left:0;top:0;bottom:0;width:10px;background:var(--surface);border-right:var(--border-hair);border-radius:var(--radius-sm) 0 0 var(--radius-sm)}
+.lb-book__kicker{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--weight-subtitle);font-size:var(--size-eyebrow);letter-spacing:var(--tracking-eyebrow);text-transform:uppercase;color:var(--text-soft)}
+.lb-book__inside p{margin:0;font-size:var(--size-caption);line-height:var(--leading-body);color:var(--text-soft);max-width:26ch}
+.lb-book__enter{font-family:var(--font-body);font-weight:var(--weight-bold);font-size:var(--size-ui);letter-spacing:var(--tracking-ui);color:var(--link)}
+
+/* The cover: two faces on one hinge */
+.lb-book__cover{position:absolute;inset:0;transform-origin:left center;transform-style:preserve-3d;transition:transform 820ms var(--ease-in-out);will-change:transform}
+.lb-book__face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--radius-sm) var(--radius-card) var(--radius-card) var(--radius-sm);overflow:hidden}
+.lb-book__face--front{background:var(--ink);box-shadow:var(--shadow-3);display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:var(--space-7) var(--space-5) var(--space-6) var(--space-7)}
+.lb-book__face--front::after{content:"";position:absolute;left:14px;top:var(--space-5);bottom:var(--space-5);width:1px;background:var(--gold);opacity:.8;box-shadow:5px 0 0 0 var(--gold)}
+.lb-book__face--back{transform:rotateY(180deg);background:var(--surface);border:var(--border-hair);box-shadow:var(--shadow-2)}
+.lb-book__title{display:block;font-family:var(--font-display);font-weight:var(--weight-display);font-size:1.5rem;line-height:var(--leading-h3);color:var(--canvas);margin:0;text-align:center}
+.lb-book__orn{font-family:var(--font-display);font-size:1.1rem;letter-spacing:.3em;color:var(--gold)}
+.lb-book__stamp{width:38px;height:1px;background:var(--gold)}
+.lb-book__mark{color:var(--canvas);opacity:.9}
+.lb-book.is-open .lb-book__cover{transform:rotateY(-118deg)}
+.lb-book.is-open .lb-book__face--front{box-shadow:var(--shadow-4)}
+@media (prefers-reduced-motion:reduce){
+  .lb-book__cover{transition:opacity var(--dur) var(--ease)}
+  .lb-book.is-open .lb-book__cover{transform:none;opacity:0}
+}
+
+/* ---- Progress (status) ------------------------------------------------ */
+.lb-status{background:var(--canvas);border:var(--border-hair);border-radius:var(--radius-card);box-shadow:var(--shadow-2);padding:var(--space-6)}
+.lb-status__head{display:flex;align-items:baseline;justify-content:space-between;gap:var(--space-4);flex-wrap:wrap;margin-bottom:var(--space-5)}
+.lb-status__title{font-family:var(--font-display);font-weight:var(--weight-display);font-size:var(--size-h3);margin:0}
+.lb-progress+.lb-progress{margin-top:var(--space-5)}
+.lb-progress__row{display:flex;align-items:baseline;justify-content:space-between;gap:var(--space-4);margin-bottom:var(--space-2)}
+.lb-progress__name{font-family:var(--font-body);font-weight:var(--weight-bold);font-size:var(--size-ui);letter-spacing:var(--tracking-ui);color:var(--text)}
+.lb-progress__pct{font-family:var(--font-body);font-weight:var(--weight-bold);font-size:var(--size-caption);color:var(--text-soft);font-variant-numeric:tabular-nums}
+.lb-progress__track{height:14px;background:var(--surface);border:var(--border-strong);border-radius:var(--radius-sm);box-shadow:var(--shadow-inset);overflow:hidden}
+.lb-progress__fill{display:block;height:100%;background:var(--blue);transform-origin:left center;animation:lb-grow 900ms var(--ease-out) both}
+.lb-progress__fill--done{background:var(--green)}
+.lb-progress__note{font-size:var(--size-caption);line-height:var(--leading-caption);color:var(--text-faint);margin:var(--space-2) 0 0;max-width:none}
+@keyframes lb-grow{from{transform:scaleX(0)}to{transform:none}}
+@media (prefers-reduced-motion:reduce){.lb-progress__fill{animation:none}}
+
+/* ---- Typographic cover placeholder (no cover art yet) ----------------- */
+.lb-mat{background:var(--canvas);border:var(--border-hair);border-radius:var(--radius-card);box-shadow:var(--shadow-2);padding:var(--space-5);display:inline-block}
+.lb-cover{aspect-ratio:1/1.5;width:230px;background:var(--ink);border-radius:var(--radius-sm);box-shadow:var(--shadow-3);padding:var(--space-6) var(--space-5);display:flex;flex-direction:column;justify-content:space-between;align-items:center;text-align:center}
+.lb-cover__series{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--weight-subtitle);font-size:var(--size-caption);letter-spacing:var(--tracking-eyebrow);text-transform:uppercase;color:var(--canvas);opacity:.82}
+.lb-cover__title{font-family:var(--font-display);font-weight:var(--weight-display);font-size:1.4rem;line-height:1.15;color:var(--canvas);margin:0}
+.lb-cover__author{font-family:var(--font-body);font-weight:var(--weight-bold);font-size:var(--size-caption);letter-spacing:.14em;text-transform:uppercase;color:var(--canvas);opacity:.82}
+.lb-cover__orn{color:var(--gold);letter-spacing:.3em;font-family:var(--font-display)}
+
+/* ---- Prose ----------------------------------------------------------- */
+.lb-prose{max-width:var(--container-prose)}
+.lb-prose p{max-width:none;margin:0 0 var(--space-5)}
+.lb-prose--story>p:first-of-type::first-letter{font-family:var(--font-display);font-weight:var(--weight-display);font-size:3.3em;line-height:.82;float:left;margin:var(--space-1) var(--space-3) 0 0;color:var(--clay-deep)}
+.lb-break{text-align:center;color:var(--gilt);letter-spacing:.6em;margin:var(--space-7) 0;font-family:var(--font-display)}
+.lb-pull{margin-top:var(--space-6)}
+
+/* Disclosure — "peek inside" */
+.lb-disclosure{border:var(--border-hair);border-radius:var(--radius-card);background:var(--canvas);box-shadow:var(--shadow-2);overflow:hidden}
+.lb-disclosure>summary{list-style:none;cursor:pointer;padding:var(--space-5) var(--space-6);display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);font-family:var(--font-display);font-weight:var(--weight-display);font-size:var(--size-h3);transition:var(--transition-control)}
+.lb-disclosure>summary::-webkit-details-marker{display:none}
+.lb-disclosure>summary:hover{background:var(--surface)}
+.lb-disclosure__hint{font-family:var(--font-body);font-weight:var(--weight-bold);font-size:var(--size-ui);letter-spacing:var(--tracking-ui);color:var(--link);white-space:nowrap}
+.lb-disclosure[open]>summary{border-bottom:var(--border-hair)}
+.lb-disclosure[open] .lb-disclosure__hint--open{display:inline}
+.lb-disclosure[open] .lb-disclosure__hint--shut{display:none}
+.lb-disclosure__hint--open{display:none}
+.lb-disclosure__body{padding:var(--space-7) var(--space-6)}
+
+/* ---- Newsletter ------------------------------------------------------ */
+.lb-signup{padding:var(--space-7)}
+.lb-signup__form{display:flex;gap:var(--space-3);flex-wrap:wrap;align-items:flex-start}
+.lb-signup__form .lb-field{flex:1 1 240px;min-width:0}
+.lb-hp{position:absolute;left:-5000px}
+
+/* ---- Footer ---------------------------------------------------------- */
+.lb-footer{background:var(--surface);border-top:var(--border-hair);padding:var(--space-8) var(--space-6)}
+.lb-footer__inner{max-width:var(--container);margin:0 auto}
+.lb-footer__cols{display:flex;gap:var(--space-8);flex-wrap:wrap;margin-top:var(--space-6)}
+.lb-footer__cols>*{flex:1 1 220px;min-width:0}
+.lb-footer h4{font-family:var(--font-body);font-weight:var(--weight-bold);font-size:var(--size-caption);letter-spacing:.14em;text-transform:uppercase;color:var(--text-soft);margin:0 0 var(--space-3)}
+.lb-footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--space-2)}
+.lb-footer a{font-size:var(--size-ui);font-weight:var(--weight-bold)}
+.lb-footer__fine{margin-top:var(--space-7);padding-top:var(--space-5);border-top:var(--border-hair);font-size:var(--size-caption);color:var(--text-faint)}
+.lb-footer__fine p{max-width:none;margin:0}
+
+/* ---- Small screens --------------------------------------------------- */
+@media (max-width:640px){
+  .lb-section{padding:var(--space-8) var(--space-5)}
+  .lb-section--tight{padding:var(--space-7) var(--space-5)}
+  .lb-hero{padding:var(--space-8) var(--space-5)}
+  .lb-header{padding:var(--space-4) var(--space-5)}
+  .lb-pagehead{padding:var(--space-7) var(--space-5) var(--space-6)}
+  .lb-footer{padding:var(--space-7) var(--space-5)}
+  .lb-nav{gap:var(--space-4);width:100%;margin-left:0}
+  .lb-header .lb-btn--secondary{display:none}
+  .lb-books{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--space-7)}
+  .lb-disclosure__body{padding:var(--space-6) var(--space-5)}
+  .lb-signup{padding:var(--space-6)}
+}
+
+/* ---- Riddle card, lights off ------------------------------------------
+   Not a dark theme: one card on an ink ground, the way a book cover is.   */
+.lb-riddle{transition:background-color var(--dur-slow) var(--ease),border-color var(--dur-slow) var(--ease),color var(--dur-slow) var(--ease)}
+.lb-riddle.is-dark{background:var(--ink);border-color:var(--ink);color:var(--canvas);box-shadow:var(--shadow-3)}
+.lb-riddle.is-dark .eyebrow{color:var(--canvas);opacity:.7}
+.lb-riddle.is-dark blockquote{color:var(--canvas);opacity:.92}
+.lb-riddle.is-dark a{color:var(--canvas);text-decoration:underline;text-decoration-color:var(--gold);text-decoration-thickness:2px}
+.lb-riddle.is-dark a:hover{color:var(--canvas);opacity:.8}
+.lb-riddle.is-dark .lb-switch__track{background:var(--muted);border-color:var(--muted)}
+.lb-riddle.is-dark .lb-switch input:checked+.lb-switch__track{background:var(--gold);border-color:var(--gold)}
+
+</style>
+</head>
+<body>
+<a class="lb-skip" href="#main">Skip to content</a>
+<header class="lb-header">
+  <div class="lb-header__inner">
+    <a class="lb-lockup" href="index.html" aria-label="Liza Beth Books — home">
+  <span class="lb-mark lb-mark--sm" role="img" aria-label="Liza Beth Books"></span>
+  <span class="lb-wordmark" style="font-size:26px">
+    <span class="lb-wordmark__name">Liza Beth</span>
+    <span class="lb-wordmark__sub">Books</span>
+  </span>
+</a>
+    <nav class="lb-nav" aria-label="Main">
+      <a class="lb-nav__link" href="index.html" data-page="index">Home</a><a class="lb-nav__link" href="about.html" data-page="about">About</a><a class="lb-nav__link" href="books.html" data-page="books" aria-current="page">Books</a><a class="lb-nav__link" href="letters.html" data-page="letters">Letters from Liza</a>
+      <a class="lb-btn lb-btn--secondary lb-btn--sm" href="letters.html#signup">Subscribe</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<div class="lb-page" id="page-books">
+
+<div class="lb-pagehead">
+  <div class="lb-wrap"><span class="eyebrow">Books</span><h1>Upcoming books</h1></div>
+</div>
+
+<section class="lb-section">
+  <div class="lb-wrap lb-cols" style="align-items:flex-start">
+    <div style="flex:0 1 300px;display:flex;justify-content:center"><div class="lb-mat">
+  <div class="lb-cover">
+    <span class="lb-cover__series">Book One</span>
+    <span><span class="lb-cover__orn" aria-hidden="true">❧</span></span>
+    <h3 class="lb-cover__title">The Fall Before Flight</h3>
+    <span class="lb-cover__author">Liza Beth</span>
+  </div>
+</div></div>
+    <div style="flex:1 1 380px">
+      <span class="eyebrow">Book One</span>
+      <h2 style="margin-top:var(--space-3)">The Fall Before Flight</h2>
+      <p class="tagline">A new home, an offer of power, and a grave mistake.</p>
+      <p>Aria and Nala live unhappily with their adoptive parents, who only want coin out of Aria and prestige out of Nala. As Aria navigates forced labor she meets a little boy thief, who becomes her door to the Unwanteds: a group of youth who live, train, and rebel together from an underground cave connected to a green river. Upon discovering her parent’s plans to marry off Nala for status, Aria convinces her sister to join her in running away to live with the Unwanteds, but finds her new home not as welcoming as she expected.</p>
+<p>We also meet Olivia, a winged girl from another time, where a Council of flying beings with special talents rule with their King. Her peaceful reality crumbling under a rebellion, Olivia escapes into visions of her dead mother.</p>
+<p>There are secrets to be unveiled, times to be unraveled, and two powers behind them all. The question is, to which power will the girls succumb?</p>
+      <div style="display:flex;gap:var(--space-2);flex-wrap:wrap;margin-top:var(--space-5)">
+        <span class="lb-tag">Young adult</span>
+        <span class="lb-tag">Christian themes</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="lb-section--tight" style="padding:0 var(--space-6) var(--space-9)">
+  <div class="lb-wrap">
+    <div class="lb-status">
+      <div class="lb-status__head">
+        <h3 class="lb-status__title">Liza’s progress</h3>
+        <span class="eyebrow">The Fall Before Flight · Book One</span>
+      </div>
+      <div class="lb-progress">
+  <div class="lb-progress__row">
+    <span class="lb-progress__name">First draft</span>
+    <span class="lb-progress__pct">100%</span>
+  </div>
+  <div class="lb-progress__track" role="progressbar" aria-label="First draft"
+       aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+    <span class="lb-progress__fill lb-progress__fill--done" style="width:100%"></span>
+  </div>
+  
+</div>
+      <div class="lb-progress">
+  <div class="lb-progress__row">
+    <span class="lb-progress__name">Editing</span>
+    <span class="lb-progress__pct">60%</span>
+  </div>
+  <div class="lb-progress__track" role="progressbar" aria-label="Editing"
+       aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+    <span class="lb-progress__fill" style="width:60%"></span>
+  </div>
+  
+</div>
+      <p class="lb-progress__note" style="margin-top:var(--space-5)">Bars move as the work does.
+        Word goes out in <a href="letters.html">Letters from Liza</a> first.</p>
+    </div>
+  </div>
+</section>
+
+<div class="lb-wrap" style="padding:0 var(--space-6)"><div class="lb-rule" role="separator"><span class="lb-rule__mark" aria-hidden="true">❧</span></div></div>
+
+<section class="lb-section">
+  <div class="lb-wrap">
+    <details class="lb-disclosure" id="chapter-one">
+      <summary>
+        <span>Peek inside — Chapter One</span>
+        <span class="lb-disclosure__hint">
+          <span class="lb-disclosure__hint--shut">Start reading &darr;</span>
+          <span class="lb-disclosure__hint--open">Close &uarr;</span>
+        </span>
+      </summary>
+      <div class="lb-disclosure__body">
+        <div class="lb-wrap--prose">
+          <span class="eyebrow">The Fall Before Flight</span>
+          <h2 style="margin:var(--space-3) 0 var(--space-6)">Chapter One</h2>
+          <div class="lb-prose lb-prose--story">
+            <p>The woman continued to sob as she gripped stained fingers around feathers and bone and passed her blade through one last time, separating the appendages forever.</p>
+<p>It was done. The fire glinted upon the steel in her hand, but the flames were reflected brighter in the crimson.</p>
+<p>The woman threw the knife away and scooped up her crying, bleeding, and broken daughter, letting their tears mix as she held her tightly, desperately. Together they sank to the floor.</p>
+<p>Left behind, on the table with the knife, two small, mangled wings quivered. Blood-soaked where they would be attached to a body.</p>
+<p>Above Aria’s head dark clouds hung low like a lid on a box. Clouds that only allowed a subtle gray glow to grace the city that lay beneath them. A city of clay towers. Homes stacked one on the other, among which Aria lay on the roof of a particularly tall stack.</p>
+<p>A mist descended from these very clouds that loomed above, chilling Aria’s bones. She stared up at them with a blank expression to mirror their own. They were like the curtains at a theater, or like shutters on a window. Like a lid on a box.</p>
+<p>What they were hiding, she could not guess. Castles, orbs of fire, and a greater darkness than even Darker Night, according to the tales. Aria didn’t believe most of them though. Not because only children and the eldest told these tales, but because she believed the world she lived in wasn’t good enough for those kinds of stories.</p>
+<p>The cold bit and she shivered, leaving her wondering why it wouldn&#x27;t just rain. Rain would force her to crawl off the roof and into the house. This drizzle just made her uncomfortable in the only place she had any peace. Yet Aria knew it wouldn’t rain, and so she grimaced as if by her scowl the clouds would open up in apology.</p>
+<p>“Aria!” a voice called from below her perch.</p>
+<p>Out the window of a small apartment at the top of the tower leaned the round face of a dark haired girl. She squinted in the rapidly deepening gloom, looking for Aria’s form above her with a practiced air, stretching out her body to see beyond the lip of the roof. Her thick hair flowed down her head, making soft brown banners in the open air. Green and clear as gems, the girl’s eyes broke out from the darkness of her hair and face, and the oncoming Darker Night.</p>
+<p>Someone with half her beauty would’ve stood out amidst the dust and mud, but what made people truly drawn to her sister was something most couldn’t name. Having lived with Nala practically her whole life, Aria knew it well.</p>
+<p>Sitting up at the summons, Aria immediately groaned at the protests of her back, confirming her presence to her sister and alleviating some frustration. There was always a the knot in the same upper area of her back. The isolated roof was a sanctuary, but between the cold evening and the hard tiles, it was far from a palace. She leaned over the edge of the tower to see her sister’s face for herself.</p>
+<p>“The food is ready,” Nala called.</p>
+<p>Aria could see subtle hints of weariness lacing her sister’s dimpled squint.</p>
+<p>“I’m not hungry,” she responded with a miserable attempt at her own smile.</p>
+<p>She couldn’t hide her grumpiness as well as her sister.</p>
+<p>“You are a horrible liar.”</p>
+<p>“I learned from the best.”</p>
+<p>A snort traveled to Aria from below, but it was quickly interrupted by a pigeon bursting from a nest beneath the tiles and flying off beyond.</p>
+<p>There was silence for a moment as both girls followed the bird with their gaze, staring out over the expanse of darkening clay towers. Each sat at haphazard heights and angles, reflecting the haste in which they had been erected. This sauntering construction created a makeshift mountain range of tiled roofs, while the true mountains that encircled the bowl of the Valley rested far beyond their current vantage point. The narrow streets below were quiet. Yet, even amidst the growing darkness, the greatest of the border mountains remained a large brooding silhouette.</p>
+<p>“You really should come and eat,” Nala persisted, breaking Aria’s contemplation.</p>
+<p>A slight frown had replaced her sister’s warm smile, matching Nala’s now sobering tone. Aria dropped her eyes, and placed her forehead on her kneecaps.</p>
+<p>“I don’t want to breathe the same air as them let alone eat their food,” Aria spat.</p>
+<p>Her sister sighed.</p>
+<p>“If you don’t want to eat what I made for you, or be in the same room as me, that&#x27;s fine,” she said, not without some pointed notes.</p>
+<p>Aria heard her retreat back into the house.</p>
+<p>Though she foresaw the turmoil to come, Aria’s feet were pulled into movement by her sister’s words. Lifting her eyes from the roof tiles, she resolved to keep the peace that night, for her sister’s sake.</p>
+<p>Aria’s perch was high compared to the neighboring towers. Six homes high, in fact, a structural feat that had been celebrated in its outright, but not entirely trusted. That was probably why their rent was cheap, and why she was the only one who could see over the endless stacks of mud to the encircling mountains. These were truly the tallest things in her whole world. The only structures that touched the valley floor as well as the clouds that hung above.</p>
+<p>She heard one of the shutters bang below her.</p>
+<p>Nala. The thought of her sister broke Aria’s reverie. She’d be waiting, alone with unpleasant company. With another groan Aria stood to her feet and with a practiced air, clambered down and through the window of their apartment.</p>
+<p>Window was a homey term for this dug out square hole in the wall of the room Aria and her sister shared. Bare was the word that best described the room itself. Apart from two hand sewn straw mattresses on either side of the small space, there were only four dusty, clay walls. The muddy walls were unadorned besides some drawings scratched into the clay at their base. Drawings that a younger Aria and Nala had composed, commemorating a time when Aria had been too small to escape beyond the little room to the roof.</p>
+<p>Instinctively her shoulders and head drooped as Aria stalked into the only other room of the house. To the left, a fire nestled an iron pot within its flames. Next to it rested a wooden rocking chair, a stool, a basket of square fabrics, and a candle lit wooden table. Beyond the fire was the only bed in the house that had a frame. Lifted from the ground, it was dressed with a feather mattress and lavish blankets. If Aria had a least favorite corner, it was that one.</p>
+<p>At this moment, however, Aria saw none of the room’s sparse but familiar furnishings. She only saw the light of the cackling fire on her toes and the wood beneath them, hoping that if didn’t look at her, maybe she wouldn’t start an argument.</p>
+<p>“Come to eat what you didn’t help make?” said a shrill voice almost as soon as Aria stepped foot into the room. “Doesn’t clean. Doesn’t cook. And wants food! Hmf!” it twittered.</p>
+<p>Aria gritted her teeth. Her resolve was already crumbling. She took another small step into the room, ignoring the question as best she could. Maybe if she didn’t speak to her, she would leave her alone. Aria moved to take her place at the table, but before she had so much as pulled out her chair, she was arrested once again.</p>
+<p>“How about you serve? Mm?”</p>
+<p>Aria’s blood simmered. To relieve a little of her frustration, Aria allowed herself some creativity in her imagining of how this moment would be very different if her sister was not present, and also if she didn’t fear sleeping outside in the depths of Darker Night.</p>
+<p>Instead of telling her mother how her voice reminded her of a spoon scraping incessantly across a earthenware bowl, Aria made a slight, if sharp, nod, removing her gaze quickly from mother’s face to the dinner things. Swiftly and quietly, Aria gathered the four wooden bowls readied by the fire and moved to the pot.</p>
+<p>She only managed to get one spoonful into the first bowl before her mother spoke again.</p>
+<p>“Those who didn’t make the meal must serve the ones who made it, hmf,” continued her mother.</p>
+<p>Aria’s eyes darted upward. This was a mistake. Dark, sparkling eyes met her own, goading her on. Aria stopped labeling the stew that smelled almost exactly like the one she had the day before, and the day before that, and in fact, the day before that one too.</p>
+<p>Stew that Nala always made.</p>
+<p>The fire glinted in the dark amber of Aria’s eyes, her hands gripping the warm bowl as they formed fists.</p>
+<p>Nala looked up in response to the silence, and instantly noticed the change in Aria’s manner, the fire in her eyes. She tried to communicate a pointed don’t look to her sister, as only sisters can. Yet, the warning was either not perceived, or more likely, purposefully ignored.</p>
+<p>“This smells an awful lot like Nala’s stew, and I seem to remember you sitting and doing nothing most of the evening,” Aria said with a level voice, feigning nonchalance as she turned back to the pot.</p>
+<p>A sharp laugh cut through the cackle of the fire.</p>
+<p>“What an idea,” said her mother, continuing to laugh as if she had never heard anything as funny as what Aria had just said. “What an idea, from the frog who did nothing for the meal.”</p>
+<p>Her mother got up from her seat and crossed the room to Aria’s shoulder, hissing her next words into her ear through yellowed teeth and thin lips.</p>
+<p>“I taught your sister that stew and have slaved over it ages before you were even born,” her spindly arms began to emphasize each word with large arcs and sharp jabs, “Not to mention my coin that paid for it!”</p>
+<p>Aria turned to face her mother stone faced: yellow teeth, wrinkles and all. The woman got even closer, growling inches from Aria’s slightly taller nose.</p>
+<p>“Who are you to talk to me about slavery?” she goaded.“Ungrateful brats! The both of you!” she yelled, turning to wave her hand at Nala too, who flinched but pretended not to notice.</p>
+<p>Aria didn’t miss a beat.</p>
+<p>“Slaved over the meal? Nala walked to the market and bought the meat, and the vegetables, with the coin I earned. You and I both know all you did was watch Nala as she cooked!” She shouted back.</p>
+<p>The stew in the bowl sloshed as Aria emphasized her words. Nala sunk into a chair, head in her hands.</p>
+<p>“We slaved for you. You did nothing but sit like a toad,” Aria finished.</p>
+<p>She had done it. The woman leapt toward her as if to grab at Aria’s tunic, shrieking like a ruffled old crow. Aria jumped back only just in time.</p>
+<p>“You useless toad of a daughter! How dare you speak like this to me! I clothe you and feed you and give you a place to sleep, you wretched frog!” she screeched.</p>
+<p>Her mother turned around again, waving exacerbated arms in the air as she spoke.</p>
+<p>“Such ungratefulness! What misfortune! What burden!” she said to the dusty walls and dark floorboards as if they sympathized with her anguish. “Stretching our meager livelihood thin to for two urchins who only sap the marrow of our bones to bitterness!”</p>
+<p>Suddenly she wheeled around again, sending a spindly arm dangerously close to Aria’s face, throwing her off her feet and sending the bowl with its contents clattering to the ground.</p>
+<p>“Serve the meal, toad, before you and your sister don’t eat anything at all.”</p>
+<p>Aria moved to stand, to yell back, but she caught the full expression of her sister now, and her puffed shoulders fell and the fire in her eyes dimmed. Her sister was almost to tears, and this had been exactly what Aria had originally set out to avoid.</p>
+<p>Bidding her frustration to retreat, Aria swallowed her retort and picked up the bowl she had originally intended to throw. Aria served the rest of the bowls, but took special care to not allow any of the potatoes into her mother’s portion.</p>
+<p>Not long into their meal, heavy steps from the stairwell announced the arrival of the final member of the household.</p>
+<p>Raphi was not petite like his wife. With a frame was almost as wide as he was tall, Aria’s adoptive father filled most door frames he passed through to the brim. Their own wooden frame was no exception.</p>
+<p>As he entered, mumbled greetings from Simona and Nala and Aria&#x27;s silence followed him as the man made his way directly to the pot resting on the fire without so much as a hello himself.</p>
+<p>Scraping of ladle on pot echoed as the remaining stew was promptly spooned into his own bowl. The bulking man settled into the last vacant chair without attending to anything or anyone other than his bowl and his spoon. The women waited.</p>
+<p>After what seemed like only a moment, Raphi wiped his mouth with his already soiled handkerchief. A sigh rose from his chest, and the glances began. Aria to Nala. Nala back at Aria. Simona at her husband. One eager, the others worried, no one attempting to speak even yet.</p>
+<p>“Delicious!” was the first word.</p>
+<p>It came from beneath the handkerchief, as it always did.</p>
+<p>“Took all afternoon,” Simona said in response.</p>
+<p>It sure took someone all afternoon.</p>
+<p>“No more?” Again from the kerchief.</p>
+<p>Simona’s pleasure turned to a frown and let out a small smile in spite of herself. Unfortunately, it did not go unnoticed.</p>
+<p>“No, thanks to the clumsy frog at our table.”</p>
+<p>“Ah, I see, well, give her a little less to waste next time.”</p>
+<p>Aria dug her fingernails into her hand.</p>
+<p>“Well of course,” the woman scoffed.</p>
+<p>Simona shifted in her seat, leaning forward a dark sparkle returning to her eye. Aria dug her fingers in deeper, boring holes into the knotted table with her downcast eyes. Before her mother could speak, however, her father changed the conversation entirely.</p>
+<p>“Ehhem, you know, Guardsman Unger promoted me today.”</p>
+<p>A new and brighter light entered her mother’s eyes. The girls sat up a little straighter.</p>
+<p>“Promotion? You are the Treasurer of the Mines now, certainly? What news!” burst Simona.</p>
+<p>Her father cocked his head.</p>
+<p>“Assistant, to the Treasurer of the Mines,” he said, kerchief now methodically folded, resting in his hands upon his chest.</p>
+<p>Aria wasn’t sure if she was happier to have this topic brought up instead of the threatened verbal dissection by her mother. She returned her eyes to the table.</p>
+<p>“Assistant to the Treasurer of the Mines?” his wife said, moving to an edge of the seat even further than she had been before.</p>
+<p>“Pretty prestigious title he said, lots of responsibility, much more than Assistant to the Assistant of the Treasurer. Looks as though I’ll be indispensable.”</p>
+<p>He announced this with a chuckle, as if he hadn’t heard his wife’s initial and ambitious presumption. Aria imagined how much badgering her father had done to get them to ‘promote’ him. She successfully masked a laugh by coughing instead.</p>
+<p>“Oh that’s wonderful darling!”</p>
+<p>Aria’s mother’s unnaturally sing song voice made even her father jump.</p>
+<p>“Will you get more coin?” she continued, giving a toothy grin. “This honorable title must come with more pay!”</p>
+<p>At the mention of more coin Nala and Aria did perk up. Where to their mother more coin meant a new dress, undoubtedly sewn by Nala, to the girls, more coin meant maybe bread with their stew, and a pillow for their beds. Her mother automatically began to preen her worn black silk she wore.</p>
+<p>Raphi moved his hand from his chest to the table.</p>
+<p>“Ah! Well, the coin, well, no. I couldn’t have them thinking I was in it for the money.”</p>
+<p>At this, the shoulders of his table companions noticeably deflated.</p>
+<p>“I’ll get more coin soon, don’t you worry. It’s all politics, you wouldn’t understand,” Raphi said, responding to the silent shoulder protest.</p>
+<p>He was right, Aria didn’t understand. She didn’t get why he wouldn’t take more money and yet complained about there being little food. Aria wasn’t even sure how Assistant to the Treasurer was any different from Assistant to the Assistant of the Treasurer.</p>
+<p>Before anyone could ask any more questions, however, Raphi ended the dinnertime conversation.</p>
+<p>“Well, let’s have this table cleared and the dishes washed then,” he said while returning his neatly folded yet terribly soiled kerchief to his pocket.</p>
+<p>Aria and Nala rose, and that was the end of that.</p>
+<p>“My jewel,” Elijah said smiling as he regarded Nala’s approach.</p>
+<p>Nala simply smiled and stood before the broad figure of Elijah. One she hadn’t noticed all those times she’d gone to the Market, but one who had noticed her.</p>
+<p>“What brings me the honor of your visit?” he asked, offering her his hand to walk together.</p>
+<p>“I have a request,” Nala began, “and I brought my sister,” she finished.</p>
+<p>Elijah turned slightly to see her face. Nala reciprocated this study of expression, looking for any sign of agitation.</p>
+<p>Elijah only raised his brows, subdued by the shining green eyes that looked up at him.</p>
+<p>“Oh? She knows?” he simply said.</p>
+<p>“Yes, she was bound to find out anyway,” Nala reasoned.</p>
+<p>“You are right, I just didn’t expect so soon.”</p>
+<p>“I know, I’m sorry.”</p>
+<p>They began walking slowly towards the back of the cave where the water that matched the eyes of Aria’s sister rested. Nala waited patiently for an opening to submit her request, enjoying the comfort and protection she felt in this stoic boy’s presence. So different from the anxiety and antagonism she had known of her father.</p>
+<p>“What do you need?” he asked.</p>
+<p>Nala took a deep breath and then plunged into the speech she had rehearsed ever since Aria had mentioned their escape.</p>
+<p>“Well, both Aria and I have been here several times now, and you know our home situation is not ideal nor stable,” Nala began slowly.</p>
+<p>She paused to give weight to these facts and to look at Elijah’s face, from which she gleaned nothing. Biting her lip, Nala let the rest of her request loose.</p>
+<p>“And so we were wondering if we could stay here?” she asked tentatively.</p>
+<p>Elijah stopped walking, halting their parallel stroll. Now uncertain and nervous, Nala added what she hoped would seal the deal.</p>
+<p>“This way Aria can better prepare for what you have planned, and we’d see each other every day,” Nala’s eyes sparkled at this last gilded idea.</p>
+<p>Elijah’s brows furrowed. This was not a good sign for a nature Nala had come love these past three months, but that which she also knew was prone to stubbornness.</p>
+<p>“You are less safe here than you are at your home,” he said.</p>
+<p>To this, no argument was to be raised, she had considered this fact that Aria had neglected to contemplate. She knew that the work done here was risky, and that leaving her family could bring unhelpful attention to them from people well connected with Guardsmen, and therefore risk Aria and Nala’s lives, and everyone else’s who lived here.</p>
+<p>Yet, Nala held onto her confidence in those she loved to overshadow this doubt and anxiety. She trusted Aria to rely on her intellect and hold the reins when their safety was at stake, and she was certain in Elijah’s protection and wisdom. Was she wrong to do this? Aria told her to give her trust sparingly, that she was risking having her heart crushed. Certainly her life had people who had hurt her, but her sister couldn’t be right when it came to those closest. She didn’t think a world like that could exist.</p>
+<p>Despite this, glimmer of light in Nala’s eyes shadowed.</p>
+<p>“There is another thing,” she uttered meekly, shame crowding her graceful features.</p>
+<p>This comment gleaned Elijah’s full attention, his brows seeming to get even closer than before.</p>
+<p>“What?” he whispered urgently. “What is it?”</p>
+<p>“Raphi and Simona have found-” she looked up at Elijah’s intense and questioning gaze, then dropped her green beams to the floor, “they’ve found a Guardsman Commander who wants to marry me.”</p>
+<p>“What?!” he shouted.</p>
+<p>Several people turned from their work in the middle of the cave towards the exclamation, wondering what could cause such an outburst from their normally stoic leader.</p>
+<p>“What?!” he grimaced, this time quieter, but with no less emotion.</p>
+<p>Nala took his arm in her hands, looking up at Elijah’s aggravated face, trying to sooth the anger she felt beneath his skin.</p>
+<p>“Elijah, I will never love another but you, you know that. I couldn’t,” her gaze held concern and compassion, she knew the hurt he felt at this news, that was the reason she hadn’t wanted to deliver it.</p>
+<p>Elijah whipped his arm out of her grasp and turned away, and water began to pool beneath Nala’s eyelids.</p>
+<p>“You know I don’t have a choice,” she said quietly.</p>
+<p>The tall shoulders slumped.</p>
+<p>“I know,” he hung his head, defeated.</p>
+<p>“If I stay here I don’t have to do this.”</p>
+<p>“I know, I just, I just can’t bear the possibility that, that,” he didn’t finish the thought, but straightened and turned back with a set face.</p>
+<p>“You are wrong,” stated Nala firmly, returning to her grasp on his arm. “It isn’t possible for you to lose me.”</p>
+<p>“That isn’t true,” the crumbling stone man asked softly.</p>
+<p>“Well I’m in your heart aren’t I?” she asked.</p>
+<p>He gave a small nod of assent.</p>
+<p>“And you are in mine,” Nala said, hoping beyond hope that this was enough to sooth his worry, because, as she had never lost anyone, she was not certain what she said was true.</p>
+            <p class="lb-break" aria-hidden="true">* * *</p>
+          </div>
+        </div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section class="lb-section--tight" style="padding:var(--space-8) var(--space-6)" id="signup-books">
+  <div class="lb-wrap">
+    <div class="lb-card lb-card--gilt lb-signup">
+      <div class="lb-cols" style="gap:var(--space-7)">
+        <div style="flex:1 1 300px">
+          <span class="lb-badge lb-badge--gold">Letters from Liza</span>
+          <h2 style="font-size:var(--size-h3);margin:var(--space-4) 0 var(--space-2)">Have the letters delivered</h2>
+          <p class="lb-card__text">Short stories, notes on what Liza is reading, and word when a
+            book moves forward. Sent to your inbox — unsubscribe whenever you like.</p>
+        </div>
+        <div style="flex:1 1 320px">
+          <!-- ================= MAILCHIMP ==================================
+               Mailchimp › Audience › Signup forms › Embedded forms gives you a
+               form tag that looks like this:
+
+                 action="https://lizabeth.us21.list-manage.com/subscribe/post?u=XXXX&id=YYYY&f_id=ZZZZ"
+                 ...and a hidden bot field named  b_XXXX_YYYY
+
+               Paste those three values over MC_U / MC_ID / MC_FID below (four
+               places: the action URL and the hidden input's name), and the form
+               is live. Until then it posts nowhere — the mailto link under it
+               still works.
+               ============================================================== -->
+          <form class="lb-signup__form"
+                action="https://lizabethletters.us1.list-manage.com/subscribe/post?u=MC_U&amp;id=MC_ID&amp;f_id=MC_FID"
+                method="post" target="_blank" novalidate>
+            <div class="lb-field">
+              <label class="lb-field__label" for="mce-EMAIL-signup-books">Your email</label>
+              <input class="lb-input" id="mce-EMAIL-signup-books" type="email" name="EMAIL"
+                     required placeholder="you@example.com" autocomplete="email">
+            </div>
+            <!-- Mailchimp's bot trap: real people never see or fill this. -->
+            <div class="lb-hp" aria-hidden="true"><input type="text" name="b_MC_U_MC_ID" tabindex="-1" value=""></div>
+            <button class="lb-btn lb-btn--primary lb-btn--md" type="submit" name="subscribe"
+                    style="margin-top:26px">Subscribe</button>
+          </form>
+          <p class="lb-field__hint" style="margin-top:var(--space-3)">Prefer to write?
+            <a href="mailto:lizabethletters@gmail.com?subject=Letters%20from%20Liza">lizabethletters@gmail.com</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+</main>
+<footer class="lb-footer">
+  <div class="lb-footer__inner">
+    <div class="lb-rule" role="separator"><span class="lb-rule__mark" aria-hidden="true">❧</span></div>
+    <div class="lb-footer__cols">
+      <div style="flex:1 1 280px">
+        <a class="lb-lockup lb-lockup--gilt" href="index.html" aria-label="Liza Beth Books — home">
+  <span class="lb-mark lb-mark--sm" role="img" aria-label="Liza Beth Books"></span>
+  <span class="lb-wordmark lb-wordmark--gilt" style="font-size:24px">
+    <span class="lb-wordmark__name">Liza Beth</span>
+    <span class="lb-wordmark__sub">Books</span>
+  </span>
+</a>
+        <p class="tagline" style="font-size:var(--size-body);margin-top:var(--space-4);max-width:38ch">For stories are how we learn, about the world and about ourselves, and so their existence, as well as their caliber, matter.</p>
+      </div>
+      <div><h4>Pages</h4><ul><li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li><li><a href="books.html">Books</a></li><li><a href="letters.html">Letters from Liza</a></li></ul></div><div><h4>Elsewhere</h4><ul>
+      <li><a href="mailto:lizabethletters@gmail.com">lizabethletters@gmail.com</a></li>
+      <li><a href="letters.html#signup">Letters from Liza</a></li>
+    </ul></div>
+    </div>
+    <div class="lb-footer__fine"><p>&copy; 2026 Liza Beth. All rights reserved.</p></div>
+  </div>
+</footer>
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  document.querySelectorAll('.lb-book').forEach(function (card) {
+    card.addEventListener('click', function (e) {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      if (card.classList.contains('is-open')) return;
+      e.preventDefault();
+      card.classList.add('is-open');
+      var href = card.getAttribute('href');
+      setTimeout(function () { window.location.href = href; }, reduce.matches ? 120 : 760);
+    });
+  });
+  var lights = document.getElementById('lights');
+  if (lights) {
+    var card = document.getElementById('riddle-card');
+    var apply = function () { card.classList.toggle('is-dark', lights.checked); };
+    lights.addEventListener('change', apply); apply();
+  }
+})();
+
+(function () {
+  function openTarget() {
+    var id = (location.hash || '').replace(/^#/, '');
+    if (!id) return;
+    var t = document.getElementById(id);
+    if (!t) return;
+    if (t.tagName === 'DETAILS') t.open = true;
+    var d = t.closest && t.closest('details'); if (d) d.open = true;
+    setTimeout(function () { t.scrollIntoView({ block: 'start' }); }, 30);
+  }
+  window.addEventListener('hashchange', openTarget);
+  openTarget();
+})();
+
+</script>
+</body>
+</html>
