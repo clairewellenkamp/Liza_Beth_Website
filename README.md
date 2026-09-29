@@ -5,12 +5,13 @@ Open `index.html` in a browser and it works — including straight off a USB sti
 
 | File | What's on it |
 |---|---|
-| `index.html` | Hero with the gilt lockup and arched window, three book-shaped nav cards, featured novel, signup |
+| `index.html` | Hero with the gilt lockup and arched window, three cloth-bound book nav cards, featured novel, signup — and the LB dragon |
 | `about.html` | *About Liza*, the LB mark, and the riddle card with its "turn off the lights" switch |
-| `books.html` | *The Fall Before Flight* — cover, back-of-book summary, **Liza's progress** bars, Chapter One |
+| `books.html` | *The Fall Before Flight* — cover art, back-of-book summary, **Liza's progress** bars, Chapter One |
 | `letters.html` | *Letters from Liza* — "Moon Gold and Silver Horses" under **Short stories**, signup |
 
-Supporting files: `favicon.ico`, `favicon-32.png`, `apple-touch-icon.png`, `icon-512.png`.
+Supporting files: `favicon.ico`, `favicon-32.png`, `apple-touch-icon.png`, `icon-512.png`, and
+`fall-before-flight-cover.jpg` (the rough-draft cover, used on the home and Books pages).
 
 Everything else — the brand stylesheet, the LB dragon monogram, the arched-window
 illustration, all the JavaScript — is inlined in each page. The only outside request is the
@@ -91,9 +92,10 @@ All the prose is Liza's own, verbatim from her documents — *About Liza*, the b
 summary, the Chapter One excerpt, and "Moon Gold and Silver Horses". Nothing was written on
 her behalf; the only authored text is interface labels and two sentences on the signup card.
 
-Three things are deliberately absent until Liza says otherwise: a series name (the book is
-labelled "Book One"), publication dates on letters, and cover art (the cover is a
-typographic placeholder on its neutral mat).
+Two things are deliberately absent until Liza says otherwise: a series name (the book is
+labelled "Book One") and publication dates on letters. The cover image is the rough draft;
+to swap in the final art, replace `fall-before-flight-cover.jpg` (and update the `width` /
+`height` on its two `<img>` tags if the proportions change).
 
 ## Design
 
@@ -101,3 +103,22 @@ Built to the Bag End · Blue Door brand kit v1.1 — ten colour tokens, three ty
 spacing scale. A few rules the stylesheet holds to, worth knowing before editing: no sixth
 colour, no dark mode (the riddle card's "lights off" is a single dark card, not an inverted
 page), gold is ornament only and never running text, and one gilt button per page.
+
+## The home page extras
+
+**The book cards** open when a mouse hovers over them (or a keyboard lands on them), so the
+blurb inside shows before anyone clicks. On phones and tablets a tap opens the cover and then
+follows the link, as before. Each cover is an inline SVG — gilt frame, beading, corner
+fleurons, fuchsia vines and a medallion scene — over a cloth-textured board. The cloth colour
+comes from one class on the `<a class="lb-book …">`: `lb-book--blue`, `lb-book--red`, or none
+for ink. The gilt is the one place gold is used for lettering, because that is what a stamped
+cover is.
+
+**The LB dragon** is the dragon from the monogram, drawn on a canvas that sits over the home
+page. Its head is cut from the mark; its body is drawn live. It starts curled over the arched
+window and, as you scroll, undulates down the page and lands on each book, the *Fall Before
+Flight* cover, and finally the signup card. Its route is worked out from where those things
+actually are, so it follows the layout on any screen size. To change where it lands, look
+for `seq.push(` in the dragon script at the bottom of `index.html`. It never blocks clicks,
+screen readers ignore it, and anyone with "reduce motion" turned on sees it resting on the
+arch and nothing more.
