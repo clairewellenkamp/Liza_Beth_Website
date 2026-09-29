@@ -828,8 +828,12 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
    The dragon from the monogram, let loose on the home page. It starts curled over
    the arched window, and as the page scrolls it undulates down through the margins,
    landing on each book, then the Fall Before Flight cover, then the signup card.
-   Its head is cut straight from the LB mark; the body is drawn along a route that is
-   rebuilt from the real positions of those objects, so it follows any layout.
+   Its head is cut straight from the LB mark and drawn into one silhouette with a
+   shaded, scaled body. The dragon is steered, not dragged: it always flies head-first
+   towards where the page says it should be, at a capped speed, turning in smooth arcs,
+   and its body follows the exact path its head took. Scroll back up and it turns round
+   and flies back up; fling the page and it glides in rather than snapping.
+   Landing spots are worked out from the real positions of those objects.
    Purely decorative: aria-hidden, pointer-events off, and held still on the arch
    for anyone who prefers reduced motion. */
 (function () {
@@ -845,7 +849,9 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
   document.body.appendChild(cvs);
   var ctx = cvs.getContext('2d');
   var css = getComputedStyle(document.documentElement);
-  var INK = css.getPropertyValue('--ink').trim() || '#33372C';
+  var BLUE = css.getPropertyValue('--blue').trim() || '#2C5A85';
+  var BLUE_DEEP = css.getPropertyValue('--blue-deep').trim() || '#1F4364';
+  var BLUE_LIT = css.getPropertyValue('--teal-lit').trim() || '#5C88AE';
   var GOLD = css.getPropertyValue('--gold').trim() || '#F0C244';
   var CANVAS = css.getPropertyValue('--canvas').trim() || '#FBF6EC';
 
@@ -856,7 +862,7 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
     var x = c.getContext('2d');
     x.drawImage(headImg, 0, 0);
     x.globalCompositeOperation = 'source-in';
-    x.fillStyle = INK; x.fillRect(0, 0, c.width, c.height);
+    x.fillStyle = BLUE; x.fillRect(0, 0, c.width, c.height);
     head = c;
   };
   headImg.src = HEAD_SRC;
@@ -980,6 +986,7 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
       var arrive = idx === 0 ? 0 : Math.max(b[1] - land, lastLeave + (sameRow ? hop : minFly));
       var leave = idx === 0 ? Math.min(60, dwell) : arrive + dwell;
       keys.push({ scroll: arrive, s: s, el: p.el }, { scroll: leave, s: s, el: p.el });
+      perches.push({ el: p.el, pts: pts, arrive: arrive, leave: leave });
       lastLeave = leave; lastY = b[1];
       var db = [b[0] - pts[pts.length - 2][0], b[1] - pts[pts.length - 2][1]], lb = Math.hypot(db[0], db[1]) || 1;
       lastPt = b; lastDir = [db[0] / lb, db[1] / lb];
@@ -989,6 +996,7 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
     if (lastArrive > maxScroll) {
       var f = maxScroll / lastArrive;
       keys.forEach(function (k) { k.scroll *= f; });
+      perches.forEach(function (p) { p.arrive *= f; p.leave *= f; });
     }
   }
 
@@ -1005,7 +1013,6 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
     return keys[keys.length - 1].s;
   }
 
-  var hint = 0;
   function at(s) {
     var n = route.length;
     if (s <= 0) { var a = route[0], b = route[1]; var l = b.s || 1; return [a.x + (b.x - a.x) / l * s, a.y + (b.y - a.y) / l * s]; }
@@ -1016,143 +1023,341 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
     return [lerp(p.x, q.x, t), lerp(p.y, q.y, t)];
   }
 
+  /* ---------- where the dragon should be ---------- */
+  // Resting on a perch while the page is inside that perch's scroll window;
+  // otherwise, flying towards the point on the route that matches the scroll.
+  function perchFor(y) {
+    if (!perches.length) return -1;
+    if (y <= perches[0].leave) return 0;
+    if (y >= perches[perches.length - 1].arrive) return perches.length - 1;
+    for (var i = 0; i < perches.length; i++) {
+      if (y >= perches[i].arrive - 0.5 && y <= perches[i].leave + 0.5) return i;
+    }
+    return -1;
+  }
+
+  /* ---------- the flying head and the path it leaves ---------- */
+  var headPos = null, heading = 0, speed = 0, phase = 0;
+  var trail = [];            // points the head has passed through, newest first
+  var walk = null;           // {k, queue:[[x,y]...]} while settling onto a perch
+  var restingOn = -1, lastScroll = 0, upward = 0;
+
+  function unit(x, y) { var l = Math.hypot(x, y) || 1; return [x / l, y / l]; }
+  function wrap(a) { while (a > Math.PI) a -= 2 * Math.PI; while (a < -Math.PI) a += 2 * Math.PI; return a; }
+
+  // Lay the dragon along a perch as if it had walked in from `from` end.
+  function poseOn(k, fromB) {
+    var pts = perches[k].pts.slice();
+    if (fromB) pts.reverse();
+    var n = pts.length, end = pts[n - 1], d = unit(end[0] - pts[n - 2][0], end[1] - pts[n - 2][1]);
+    var back = unit(pts[0][0] - pts[1][0], pts[0][1] - pts[1][1]);
+    trail = [];
+    for (var i = n - 2; i >= 0; i--) trail.push({ x: pts[i][0], y: pts[i][1] });
+    for (var j = 1; j <= 80; j++) trail.push({ x: pts[0][0] + back[0] * j * 6, y: pts[0][1] + back[1] * j * 6 });
+    headPos = { x: end[0], y: end[1] };
+    heading = Math.atan2(d[1], d[0]); headAng = heading;
+    flip = flipTarget = Math.cos(heading) >= 0 ? 1 : -1;
+    speed = 0; walk = null; restingOn = k;
+  }
+
+  // Build the landing: approach in line with the perch, then walk along its top.
+  function startWalk(k) {
+    var pts = perches[k].pts;
+    var a = pts[0], b = pts[pts.length - 1];
+    var fromB = Math.hypot(headPos.x - b[0], headPos.y - b[1]) < Math.hypot(headPos.x - a[0], headPos.y - a[1]);
+    var seq = pts.slice(); if (fromB) seq.reverse();
+    var d = unit(seq[1][0] - seq[0][0], seq[1][1] - seq[0][1]), run = 70 * K;
+    var q = [], appr = Math.hypot(headPos.x - seq[0][0], headPos.y - seq[0][1]) > 40 * K;
+    if (appr) q.push([seq[0][0] - d[0] * run, seq[0][1] - d[1] * run]);
+    walk = { k: k, appr: appr, queue: q.concat(seq.filter(function (_, i) { return i % 2 === 0 || i === seq.length - 1; })) };
+  }
+
+  function steer(dt, vw, vh) {
+    var sy = scrollY;
+    upward = lerp(upward, sy < lastScroll - 0.5 ? 1 : sy > lastScroll + 0.5 ? 0 : upward, 0.1);
+    lastScroll = sy;
+    var k = perchFor(sy), target, flying = true;
+    if (k < 0 && upward > 0.5) {   // heading back up: make for the perch above and settle there
+      for (var pi = perches.length - 1; pi >= 0; pi--) if (perches[pi].arrive <= sy) { k = pi; break; }
+    }
+    if (k >= 0) {
+      if (restingOn === k && !walk) { speed = 0; return; }
+      if (!walk || walk.k !== k) { restingOn = -1; startWalk(k); }
+      var q = walk.queue;
+      while (q.length > 1 && Math.hypot(q[0][0] - headPos.x, q[0][1] - headPos.y) < 16 * K) { q.shift(); walk.appr = false; }
+      target = q[0];
+      flying = walk.appr;
+      if (q.length === 1 && Math.hypot(target[0] - headPos.x, target[1] - headPos.y) < 1.5) {
+        headPos.x = target[0]; headPos.y = target[1]; speed = 0;
+        restingOn = k; walk = null; thump(perches[k].el);
+        return;
+      }
+    } else {
+      walk = null; restingOn = -1;
+      target = at(sForScroll(sy));
+      var tt = performance.now() / 1000;   // hovering mid-air: drift in a slow figure-eight
+      target = [target[0] + Math.sin(tt * 0.9) * 14 * K, target[1] + Math.sin(tt * 1.8) * 7 * K];
+    }
+
+    // fling guard: if the page jumped far away, bring the dragon in from just off-screen
+    var dx = target[0] - headPos.x, dy = target[1] - headPos.y, dist = Math.hypot(dx, dy);
+    var offTop = headPos.y < sy - 350, offBot = headPos.y > sy + vh + 350;
+    if ((offTop || offBot) && dist > vh * 1.1 && target[1] > sy - 200 && target[1] < sy + vh + 200) {
+      var ny = offTop ? sy - 160 * K : sy + vh + 160 * K, nx = lerp(target[0], headPos.x, 0.25);
+      var dir = unit(target[0] - nx, target[1] - ny);
+      headPos = { x: nx, y: ny };
+      heading = Math.atan2(dir[1], dir[0]); headAng = heading;
+      trail = [];
+      for (var j = 1; j <= 90; j++) trail.push({ x: nx - dir[0] * j * 5 + Math.sin(j * 0.12) * 18 * K, y: ny - dir[1] * j * 5 });
+      speed = 380 * K;
+      dx = target[0] - nx; dy = target[1] - ny; dist = Math.hypot(dx, dy);
+    }
+
+    var walking = !flying && k >= 0;
+    var turnRate = walking ? 7 : 3.3;                       // rad/s
+    var vMax = (walking ? 320 : 760) * K, accel = 900 * K, decel = 1500 * K;
+    var want = Math.atan2(dy, dx);
+    if (flying && dist > 90 * K) {                           // serpentine: the head weaves as it flies
+      var wig = 0.62 * Math.min(1, (dist - 90 * K) / (200 * K));
+      want += wig * Math.sin(phase);
+    }
+    var err = wrap(want - heading);
+    heading = wrap(heading + Math.max(-turnRate * dt, Math.min(turnRate * dt, err)));
+    var vWant = Math.min(vMax, 40 * K + dist * (walking ? 5 : 2.6));
+    if (Math.abs(err) > 0.5) vWant = Math.min(vWant, turnRate * dist * 0.3 + 8 * K); // tighten, don't orbit
+    speed = vWant > speed ? Math.min(vWant, speed + accel * dt) : Math.max(vWant, speed - decel * dt);
+    var stepLen = speed * dt;
+    if (stepLen >= dist && Math.abs(err) < 0.4) { headPos.x = target[0]; headPos.y = target[1]; }
+    else { headPos.x += Math.cos(heading) * stepLen; headPos.y += Math.sin(heading) * stepLen; }
+    phase += stepLen / (230 * K) * Math.PI * 2;
+
+    var last = trail[0];
+    if (!last || Math.hypot(headPos.x - last.x, headPos.y - last.y) >= 1.5) trail.unshift({ x: headPos.x, y: headPos.y });
+    trimTrail();
+  }
+
+  function trimTrail() {
+    var acc = 0, max = 92 * 3.4 * K + 120;
+    for (var i = 1; i < trail.length; i++) {
+      acc += Math.hypot(trail[i].x - trail[i - 1].x, trail[i].y - trail[i - 1].y);
+      if (acc > max) { trail.length = i + 1; return; }
+    }
+  }
+
+  // Sample the body: N+1 points spaced ds apart, backwards along the trail from the head.
+  function sampleBody(N, ds) {
+    var P = [[headPos.x, headPos.y]], prev = [headPos.x, headPos.y], idx = 0, need = ds;
+    while (P.length <= N) {
+      var nxt = trail[idx];
+      if (!nxt) { // ran out of trail: continue straight
+        var a = P[P.length - 1], b = P[P.length - 2] || [a[0] + 1, a[1]];
+        var d = unit(a[0] - b[0], a[1] - b[1]);
+        P.push([a[0] + d[0] * ds, a[1] + d[1] * ds]); continue;
+      }
+      var seg = Math.hypot(nxt.x - prev[0], nxt.y - prev[1]);
+      if (seg >= need) {
+        var t = need / seg;
+        prev = [lerp(prev[0], nxt.x, t), lerp(prev[1], nxt.y, t)];
+        P.push(prev.slice()); need = ds;
+      } else { need -= seg; prev = [nxt.x, nxt.y]; idx++; }
+    }
+    return P;
+  }
+
   /* ---------- drawing ---------- */
   var dpr = 1, W = 0, H = 0;
+  var off = document.createElement('canvas'), octx = off.getContext('2d');
   function size() {
     dpr = Math.min(2, window.devicePixelRatio || 1);
     W = innerWidth; H = innerHeight;
-    cvs.width = Math.round(W * dpr); cvs.height = Math.round(H * dpr);
+    cvs.width = off.width = Math.round(W * dpr); cvs.height = off.height = Math.round(H * dpr);
   }
 
-  var sNow = null, vel = 0, flip = 1, flipTarget = 1, landedAt = null;
+  var flip = 1, flipTarget = 1, headAng = 0, lastT = null;
+
+  function strokeAlong(c, P, Nn, side, offFrac, widthFrac, color, alpha, from, wfn) {
+    c.strokeStyle = color; c.lineCap = 'round';
+    for (var i = from; i < P.length - 1; i++) {
+      var w = wfn(i), o = side * w * offFrac;
+      c.globalAlpha = alpha * Math.min(1, i / 9);   // fade in behind the head so the two blend
+      c.lineWidth = Math.max(0.5, w * widthFrac);
+      c.beginPath();
+      c.moveTo(P[i][0] + Nn[i][0] * o, P[i][1] + Nn[i][1] * o);
+      c.lineTo(P[i + 1][0] + Nn[i + 1][0] * o, P[i + 1][1] + Nn[i + 1][1] * o);
+      c.stroke();
+    }
+    c.globalAlpha = 1;
+  }
 
   function frame(time) {
     requestAnimationFrame(frame);
-    if (!route.length || document.hidden) return;
-    var target = reduce.matches ? keys[0].s : sForScroll(scrollY);
-    if (sNow === null) sNow = target;
-    var step = (target - sNow) * (reduce.matches ? 1 : 0.14);
-    sNow += step;
-    vel = lerp(vel, Math.min(1, Math.abs(step) / (6 * K)), 0.08);
-    thump(target);
+    if (!perches.length || document.hidden) { lastT = null; return; }
+    var dt = lastT === null ? 1 / 60 : Math.min(0.05, (time - lastT) / 1000); lastT = time;
+    if (!headPos) { var k0 = reduce.matches ? 0 : Math.max(0, perchFor(scrollY)); poseOn(k0, false); }
+    if (!reduce.matches) steer(dt, document.documentElement.clientWidth, H);
 
     var tsec = time / 1000, sy = scrollY;
     var N = 92, ds = 3.4 * K, neck = 27 * K;
-    var P = [];
-    for (var i = 0; i <= N; i++) P.push(at(sNow - i * ds));
-    // bounding check: skip if entirely off-screen
-    var minY = Infinity, maxY = -Infinity;
-    for (i = 0; i <= N; i += 8) { minY = Math.min(minY, P[i][1]); maxY = Math.max(maxY, P[i][1]); }
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, W, H);
-    if (maxY - sy < -120 || minY - sy > H + 120) return;
+    var P = sampleBody(N, ds);
+    var minY = Infinity, maxY = -Infinity, minX = Infinity, maxX = -Infinity;
+    for (var i = 0; i <= N; i++) {
+      minY = Math.min(minY, P[i][1]); maxY = Math.max(maxY, P[i][1]);
+      minX = Math.min(minX, P[i][0]); maxX = Math.max(maxX, P[i][0]);
+    }
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, cvs.width, cvs.height);
+    if (maxY - sy < -140 || minY - sy > H + 140) return;
 
-    // tangents, normals and a living ripple running from neck to tail
-    var T = [], Nn = [], amp = (reduce.matches ? 0 : 1.2 + 7 * vel) * K;
+    // tangents (pointing towards the head) and normals; a gentle ripple keeps it alive at rest
+    var T = [], Nn = [];
     for (i = 0; i <= N; i++) {
       var a = P[Math.max(0, i - 1)], b = P[Math.min(N, i + 1)];
-      var tx = a[0] - b[0], ty = a[1] - b[1], l = Math.hypot(tx, ty) || 1;
-      T.push([tx / l, ty / l]); Nn.push([-ty / l, tx / l]);
+      var tv = unit(a[0] - b[0], a[1] - b[1]);
+      T.push(tv); Nn.push([-tv[1], tv[0]]);
     }
+    var amp = reduce.matches ? 0 : (1.1 + Math.min(1, speed / (500 * K)) * 1.5) * K;
     for (i = 0; i <= N; i++) {
-      var env = Math.min(1, i / 18);
-      var w = amp * env * Math.sin(i * 0.2 - tsec * (2 + 5 * vel));
-      P[i] = [P[i][0] + Nn[i][0] * w, P[i][1] - sy + Nn[i][1] * w];
+      var w0 = amp * Math.min(1, i / 16) * Math.sin(i * 0.2 - tsec * 2.4);
+      P[i] = [P[i][0] + Nn[i][0] * w0, P[i][1] - sy + Nn[i][1] * w0];
     }
-    var hx = T[0][0], hy = T[0][1];
-    if (Math.abs(hx) > 0.3) flipTarget = hx >= 0 ? 1 : -1;
-    flip = reduce.matches ? flipTarget : lerp(flip, flipTarget, 0.12);
 
-    function width(u) { return neck * (1 - Math.pow(u, 1.7)) * (0.92 + 0.22 * Math.sin(Math.PI * Math.min(1, u * 1.4))); }
+    // head direction: smoothed, and taken from the neck so head and body turn together
+    var hd = unit(P[0][0] - P[5][0], P[0][1] - P[5][1]);
+    headAng = headAng + wrap(Math.atan2(hd[1], hd[0]) - headAng) * (reduce.matches ? 1 : 0.35);
+    var cx = Math.cos(headAng);
+    if (Math.abs(cx) > 0.25) flipTarget = cx >= 0 ? 1 : -1;
+    flip = reduce.matches ? flipTarget : lerp(flip, flipTarget, Math.min(1, dt * 7));
+    var backSign = flip >= 0 ? 1 : -1, roll = Math.abs(flip);
+
+    var headH = neck * 1.14;
+    function width(i) {
+      var u = i / N;
+      var body = neck * (1 - Math.pow(u, 1.7)) * (0.92 + 0.22 * Math.sin(Math.PI * Math.min(1, u * 1.4)));
+      var m = Math.min(1, i / 7); m = m * m * (3 - 2 * m);
+      return lerp(headH, body, m);          // the neck swells to meet the head's cut exactly
+    }
+
+    var c = octx;
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.globalCompositeOperation = 'source-over';
+    c.clearRect(0, 0, W, H);
+    c.fillStyle = BLUE;
+
+    // 1. silhouette: mane spines, body, tail barb, head — one shape
+    for (i = 1; i < N * 0.84; i += 6) {
+      var u = i / N, base = width(i) / 2;
+      var j = Math.min(N, i + 5), k2 = Math.min(N, i + 11);
+      var len = K * (7 + 11 * Math.exp(-i / 12)) * (1 - 0.55 * u) * roll;
+      var nb = [-Nn[i][0] * backSign, -Nn[i][1] * backSign];
+      var bx0 = P[i][0] + nb[0] * base * .75, by0 = P[i][1] + nb[1] * base * .75;
+      var bx1 = P[j][0] + nb[0] * width(j) / 2 * .75, by1 = P[j][1] + nb[1] * width(j) / 2 * .75;
+      var tipx = P[k2][0] + nb[0] * (width(k2) / 2 + len), tipy = P[k2][1] + nb[1] * (width(k2) / 2 + len);
+      c.beginPath(); c.moveTo(bx0, by0);
+      c.quadraticCurveTo(lerp(bx0, tipx, .5) + nb[0] * len * .35, lerp(by0, tipy, .5) + nb[1] * len * .35, tipx, tipy);
+      c.lineTo(bx1, by1); c.closePath(); c.fill();
+    }
     var L = [], R = [];
     for (i = 0; i <= N; i++) {
-      var hw = width(i / N) / 2;
+      var hw = width(i) / 2;
       L.push([P[i][0] + Nn[i][0] * hw, P[i][1] + Nn[i][1] * hw]);
       R.push([P[i][0] - Nn[i][0] * hw, P[i][1] - Nn[i][1] * hw]);
     }
-    // which side is the back (spines) — the side the head's crown is on
-    var backSign = flip >= 0 ? 1 : -1;
-    var spineMag = Math.abs(flip);
-
-    ctx.fillStyle = INK;
-    // dorsal spines: swept-back flame shapes like the mane on the mark
-    for (i = 4; i < N * 0.82; i += 7) {
-      var u = i / N, base = width(u) / 2;
-      var j = Math.min(N, i + 5), k2 = Math.min(N, i + 10);
-      var len = (12 - 7 * u) * K * spineMag;
-      var nb = [Nn[i][0] * backSign * -1, Nn[i][1] * backSign * -1];
-      // Nn is the right-hand side of travel; the crown of a right-facing head is on the other side
-      var bx0 = P[i][0] + nb[0] * base * .8, by0 = P[i][1] + nb[1] * base * .8;
-      var bx1 = P[j][0] + nb[0] * width(j / N) / 2 * .8, by1 = P[j][1] + nb[1] * width(j / N) / 2 * .8;
-      var tipx = P[k2][0] + nb[0] * (width(k2 / N) / 2 + len), tipy = P[k2][1] + nb[1] * (width(k2 / N) / 2 + len);
-      ctx.beginPath(); ctx.moveTo(bx0, by0);
-      ctx.quadraticCurveTo(lerp(bx0, tipx, .5) + nb[0] * len * .35, lerp(by0, tipy, .5) + nb[1] * len * .35, tipx, tipy);
-      ctx.lineTo(bx1, by1); ctx.closePath(); ctx.fill();
-    }
-    // body
-    ctx.beginPath();
-    ctx.moveTo(L[0][0], L[0][1]);
-    for (i = 1; i <= N; i++) ctx.lineTo(L[i][0], L[i][1]);
-    for (i = N; i >= 0; i--) ctx.lineTo(R[i][0], R[i][1]);
-    ctx.closePath(); ctx.fill();
-    // tail barb: the arrowhead the mark's tail ends in
+    c.beginPath(); c.moveTo(L[0][0], L[0][1]);
+    for (i = 1; i <= N; i++) c.lineTo(L[i][0], L[i][1]);
+    for (i = N; i >= 0; i--) c.lineTo(R[i][0], R[i][1]);
+    c.closePath(); c.fill();
     var tp = P[N], tt = T[N], tn = Nn[N], bl = 13 * K, bw = 7 * K;
-    ctx.beginPath();
-    ctx.moveTo(P[N - 4][0] + tn[0] * bw, P[N - 4][1] + tn[1] * bw);
-    ctx.lineTo(tp[0] - tt[0] * bl, tp[1] - tt[1] * bl);
-    ctx.lineTo(P[N - 4][0] - tn[0] * bw * .5, P[N - 4][1] - tn[1] * bw * .5);
-    ctx.lineTo(P[N - 9][0], P[N - 9][1]);
-    ctx.closePath(); ctx.fill();
-    // belly scales: faint canvas-coloured arcs across the body
-    ctx.strokeStyle = CANVAS; ctx.globalAlpha = 0.16; ctx.lineWidth = 1;
-    for (i = 6; i < N - 6; i += 4) {
-      var hw2 = width(i / N) / 2 * .62;
-      ctx.beginPath();
-      ctx.moveTo(P[i][0] + Nn[i][0] * hw2, P[i][1] + Nn[i][1] * hw2);
-      ctx.quadraticCurveTo(P[i][0] + T[i][0] * 3 * K, P[i][1] + T[i][1] * 3 * K, P[i][0] - Nn[i][0] * hw2, P[i][1] - Nn[i][1] * hw2);
-      ctx.stroke();
-    }
-    ctx.globalAlpha = 1;
+    c.beginPath();
+    c.moveTo(P[N - 4][0] + tn[0] * bw, P[N - 4][1] + tn[1] * bw);
+    c.lineTo(tp[0] - tt[0] * bl, tp[1] - tt[1] * bl);
+    c.lineTo(P[N - 4][0] - tn[0] * bw * .5, P[N - 4][1] - tn[1] * bw * .5);
+    c.lineTo(P[N - 9][0], P[N - 9][1]);
+    c.closePath(); c.fill();
 
-    // head, rotated to the direction of travel and mirrored so its crown stays up
-    if (head) {
-      var hw0 = head.width, hh0 = head.height;
-      var sc = (neck * 1.14) / (hh0 * 0.47);
-      var ang = Math.atan2(hy, hx); // T points along the direction of travel
-      ctx.save();
-      ctx.translate(P[0][0], P[0][1]);
-      ctx.rotate(ang);
-      ctx.scale(1, flip === 0 ? 0.001 : flip);
-      ctx.rotate(-HEAD_TILT);
-      ctx.translate(-2 * K, -HEAD_ATTACH_Y * hh0 * sc);
-      ctx.fillStyle = GOLD;
-      ctx.beginPath(); ctx.ellipse(EYE[0] * hw0 * sc, EYE[1] * hh0 * sc, 4.2 * K, 2.4 * K, 0.35, 0, Math.PI * 2); ctx.fill();
-      ctx.drawImage(head, 0, 0, hw0 * sc, hh0 * sc);
-      ctx.restore();
+    var sc = 0, hw0 = 0, hh0 = 0;
+    function headFrame() {
+      c.translate(P[0][0], P[0][1]);
+      c.rotate(headAng);
+      c.scale(1, flip === 0 ? 0.001 : flip);
+      c.rotate(-HEAD_TILT);
+      c.translate(-5 * K, -HEAD_ATTACH_Y * hh0 * sc);
     }
+    if (head) {
+      hw0 = head.width; hh0 = head.height; sc = headH / (hh0 * 0.47);
+      c.save(); headFrame();
+      c.fillRect(0, hh0 * sc * 0.2, hw0 * sc * 0.24, hh0 * sc * 0.47);   // solid neck behind the cut
+      c.drawImage(head, 0, 0, hw0 * sc, hh0 * sc); c.restore();
+    }
+
+    // 2. shading, painted only where the silhouette is — so it wraps head and body alike
+    c.globalCompositeOperation = 'source-atop';
+    var belly = backSign;   // +Nn side is the belly when the crown is up
+    strokeAlong(c, P, Nn, belly, 0.26, 0.34, BLUE_LIT, 0.55, 3, width);               // pale underbelly
+    c.strokeStyle = BLUE_DEEP; c.lineWidth = 1; c.globalAlpha = 0.45;                 // belly plates
+    for (i = 8; i < N - 4; i += 3) {
+      var ww = width(i);
+      c.beginPath();
+      c.moveTo(P[i][0] + Nn[i][0] * belly * ww * .1, P[i][1] + Nn[i][1] * belly * ww * .1);
+      c.lineTo(P[i][0] + Nn[i][0] * belly * ww * .46, P[i][1] + Nn[i][1] * belly * ww * .46);
+      c.stroke();
+    }
+    c.globalAlpha = 1;
+    strokeAlong(c, P, Nn, belly, 0.47, 0.14, BLUE_DEEP, 0.8, 0, width);               // belly-side core shadow
+    strokeAlong(c, P, Nn, -belly, 0.47, 0.1, BLUE_DEEP, 0.55, 0, width);              // rim along the back
+    strokeAlong(c, P, Nn, -belly, 0.2, 0.2, BLUE_LIT, 0.5, 0, width);                 // light along the spine
+    strokeAlong(c, P, Nn, -belly, 0.24, 0.05, CANVAS, 0.35, 2, width);                // glint
+    c.strokeStyle = BLUE_DEEP; c.globalAlpha = 0.35; c.lineWidth = 0.9;               // back scales
+    for (i = 6; i < N - 6; i += 3) {
+      var sw = width(i), o1 = -belly * sw * 0.02, o2 = -belly * sw * 0.36;
+      var ax = P[i][0] + Nn[i][0] * o1, ay = P[i][1] + Nn[i][1] * o1;
+      var bx = P[i][0] + Nn[i][0] * o2, by = P[i][1] + Nn[i][1] * o2;
+      var mx = (ax + bx) / 2 - T[i][0] * 3 * K, my = (ay + by) / 2 - T[i][1] * 3 * K;
+      c.beginPath(); c.moveTo(ax, ay); c.quadraticCurveTo(mx, my, bx, by); c.stroke();
+    }
+    c.globalAlpha = 1;
+    if (head) { // the same light falls on the head: lit crown, shaded jaw
+      c.save(); headFrame();
+      var g = c.createLinearGradient(0, 0, 0, hh0 * sc);
+      g.addColorStop(0, BLUE_LIT); g.addColorStop(0.42, 'rgba(0,0,0,0)'); g.addColorStop(1, BLUE_DEEP);
+      c.globalAlpha = 0.75; c.fillStyle = g; c.fillRect(0, 0, hw0 * sc, hh0 * sc);
+      c.globalAlpha = 1; c.restore();
+    }
+
+    // 3. the eye, then the whole dragon onto the page with a soft shadow beneath it
+    c.globalCompositeOperation = 'source-over';
+    if (head) {
+      c.save(); headFrame(); c.fillStyle = GOLD;
+      c.beginPath(); c.ellipse(EYE[0] * hw0 * sc, EYE[1] * hh0 * sc, 4 * K, 2.3 * K, 0.35, 0, Math.PI * 2); c.fill();
+      c.restore();
+    }
+    var pad = 60 * K;
+    var x0 = Math.max(0, Math.floor((minX - pad) * dpr)), y0 = Math.max(0, Math.floor((minY - sy - pad) * dpr));
+    var x1 = Math.min(cvs.width, Math.ceil((maxX + pad) * dpr)), y1 = Math.min(cvs.height, Math.ceil((maxY - sy + pad) * dpr));
+    if (x1 <= x0 || y1 <= y0) return;
+    var lift = restingOn >= 0 ? 0.5 : 1;   // shadow sits tighter when perched
+    ctx.shadowColor = 'rgba(31,67,100,' + (0.28 - 0.08 * lift) + ')';
+    ctx.shadowBlur = (6 + 10 * lift) * dpr; ctx.shadowOffsetX = 2 * dpr * lift; ctx.shadowOffsetY = (4 + 10 * lift) * dpr;
+    ctx.drawImage(off, x0, y0, x1 - x0, y1 - y0, x0, y0, x1 - x0, y1 - y0);
+    ctx.shadowColor = 'transparent';
   }
 
   // a little bump in whatever the dragon lands on
-  function thump(target) {
-    if (reduce.matches) return;
-    for (var i = 0; i < keys.length; i += 2) {
-      var k = keys[i];
-      if (k.el && Math.abs(target - k.s) < 1 && Math.abs(sNow - k.s) < 4) {
-        if (landedAt !== k.el) {
-          landedAt = k.el;
-          var el = k.el.closest('.lb-book') || k.el;
-          el.classList.remove('is-landed'); void el.offsetWidth; el.classList.add('is-landed');
-        }
-        return;
-      }
-    }
-    if (Math.abs(target - sNow) > 30) landedAt = null;
+  function thump(el) {
+    if (!el || reduce.matches) return;
+    el = el.closest('.lb-book') || el;
+    el.classList.remove('is-landed'); void el.offsetWidth; el.classList.add('is-landed');
   }
 
   var pending = false;
   function relayout() {
     if (pending) return; pending = true;
-    requestAnimationFrame(function () { pending = false; size(); build(); });
+    requestAnimationFrame(function () {
+      pending = false; size(); build();
+      if (headPos && perches.length) {
+        var k = reduce.matches ? 0 : perchFor(scrollY);
+        if (k >= 0) poseOn(k, false);
+      }
+    });
   }
   size(); build();
   window.addEventListener('resize', relayout);
