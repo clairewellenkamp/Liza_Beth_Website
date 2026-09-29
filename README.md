@@ -17,40 +17,41 @@ illustration, all the JavaScript — is inlined in each page. The only outside r
 Google Fonts stylesheet for Spectral, Crimson Pro and Source Sans 3; if that ever fails to
 load, the pages fall back to Georgia and a system sans and still read correctly.
 
-## The three things you'll want to change
+## The Mailchimp signup form
 
-### 1. Wire up the Mailchimp signup form
+The signup form appears on all four pages and **is wired to the live audience** — it posts
+to `gmail.us8.list-manage.com` and real addresses land in Mailchimp. Under it sits a
+`mailto:lizabethletters@gmail.com` link, kept as a fallback for anyone whose browser blocks
+the form.
 
-The signup form appears on all four pages and currently posts to placeholder IDs, so it
-doesn't collect anything yet. Under it is a `mailto:lizabethletters@gmail.com` link that
-works today, so nobody is turned away in the meantime.
+You only need what follows if you ever regenerate the form in Mailchimp.
 
-In Mailchimp: **Audience → Signup forms → Embedded form**. In the code it shows you, find
-the `<form action="...">` line. It looks like:
+Mailchimp moves this menu around; as of September 2026 it's **Forms → Other forms → Create
+new form → Create embedded form**, then **Copy Code**. In the code it gives you, find the
+`<form action="...">` line:
 
 ```
-action="https://lizabeth.us21.list-manage.com/subscribe/post?u=XXXX&id=YYYY&f_id=ZZZZ"
+action="https://gmail.us8.list-manage.com/subscribe/post?u=XXXX&id=YYYY&f_id=ZZZZ"
 ```
 
-Copy those three values. Then in **each of the four HTML files**, find-and-replace:
+Each of the four HTML files carries those values in **two** places, and they have to agree:
 
-- `MC_U` → your `u=` value
-- `MC_ID` → your `id=` value
-- `MC_FID` → your `f_id=` value
+1. the `action` URL on the `<form>` tag, and
+2. the hidden input just above the Subscribe button, named `b_<u>_<id>`.
 
-Replace every occurrence — a plain find-and-replace across all four files does it in one
-pass. They show up in two places per form: the `action` URL, and again in the hidden field
-named `b_MC_U_MC_ID` just above the Subscribe button. That hidden field is Mailchimp's bot
-trap and has to keep matching the other two, so don't skip it.
+That hidden input is Mailchimp's bot trap. If its name stops matching the `u` and `id` in
+the action URL, Mailchimp silently rejects every signup — so never update one without the
+other. Check the host at the front of the URL too; the `usNN` number is account-specific.
 
-While you're there, check the domain at the front of the `action` URL matches yours
-(`lizabethletters.us1.list-manage.com` is a placeholder — Mailchimp's snippet will show the
-right one, often a different `usNN`).
+### Testing it
 
-Above each form is an HTML comment repeating these steps. Visitors never see it, so it's
-fine to leave; delete it once the form is live if you'd rather keep the file tidy.
+Subscribe with your own address and confirm it appears under **Audience → All contacts**. A
+signup that seems to work but never arrives almost always means the bot-trap name and the
+action URL have drifted apart.
 
-### 2. Update the progress bars
+## Two other things you'll want to change
+
+### 1. Update the progress bars
 
 In `books.html`, search for `lb-progress`. There are two blocks — First draft and Editing.
 Each one carries the number in three places, and **all three have to match** or the bar and
@@ -68,7 +69,7 @@ turns the bar green instead of blue.
 To add a stage, copy a whole `<div class="lb-progress">…</div>` block, paste it after the
 last one, and change the name and the three numbers.
 
-### 3. Add a letter
+### 2. Add a letter
 
 In `letters.html`, each letter is one `<article class="lb-card">`. Copy the existing one,
 paste it below, and replace the title in the `<h3>` and the paragraphs inside

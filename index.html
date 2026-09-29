@@ -689,19 +689,15 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
         </div>
         <div style="flex:1 1 320px">
           <!-- ================= MAILCHIMP ==================================
-               Mailchimp › Audience › Signup forms › Embedded forms gives you a
-               form tag that looks like this:
-
-                 action="https://lizabeth.us21.list-manage.com/subscribe/post?u=XXXX&id=YYYY&f_id=ZZZZ"
-                 ...and a hidden bot field named  b_XXXX_YYYY
-
-               Paste those three values over MC_U / MC_ID / MC_FID below (four
-               places: the action URL and the hidden input's name), and the form
-               is live. Until then it posts nowhere — the mailto link under it
-               still works.
+               Wired to the live audience (u=cc818fe75d9dcc9ec54d2ffcd,
+               id=64465ed7ba). Both the action URL below and the hidden
+               bot field's name carry these values — they have to match, so if
+               you ever regenerate the form in Mailchimp
+               (Forms › Other forms › Create embedded form), update both,
+               in all four pages.
                ============================================================== -->
           <form class="lb-signup__form"
-                action="https://lizabethletters.us1.list-manage.com/subscribe/post?u=MC_U&amp;id=MC_ID&amp;f_id=MC_FID"
+                action="https://gmail.us8.list-manage.com/subscribe/post?u=cc818fe75d9dcc9ec54d2ffcd&amp;id=64465ed7ba&amp;f_id=009318e1f0"
                 method="post" target="_blank" novalidate>
             <div class="lb-field">
               <label class="lb-field__label" for="mce-EMAIL-signup-home">Your email</label>
@@ -709,7 +705,7 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
                      required placeholder="you@example.com" autocomplete="email">
             </div>
             <!-- Mailchimp's bot trap: real people never see or fill this. -->
-            <div class="lb-hp" aria-hidden="true"><input type="text" name="b_MC_U_MC_ID" tabindex="-1" value=""></div>
+            <div class="lb-hp" aria-hidden="true"><input type="text" name="b_cc818fe75d9dcc9ec54d2ffcd_64465ed7ba" tabindex="-1" value=""></div>
             <button class="lb-btn lb-btn--primary lb-btn--md" type="submit" name="subscribe"
                     style="margin-top:26px">Subscribe</button>
           </form>
