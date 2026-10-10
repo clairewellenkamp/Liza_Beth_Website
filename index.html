@@ -452,7 +452,7 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
 }
 
 /* ---- The LB dragon (home page) --------------------------------------- */
-.lb-dragon{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:45}
+.lb-dragon{position:fixed;inset:0;pointer-events:none;z-index:45;overflow:hidden;contain:strict}
 @keyframes lb-thump{0%{transform:none}30%{transform:translateY(3px) scaleY(.99)}65%{transform:translateY(-1px)}100%{transform:none}}
 .is-landed{animation:lb-thump 520ms var(--ease-out)}
 
@@ -825,548 +825,585 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
 })();
 
 /* ---- The LB dragon ------------------------------------------------------
-   The dragon from the monogram, let loose on the home page. It starts curled over
-   the arched window, and as the page scrolls it undulates down through the margins,
-   landing on each book, then the Fall Before Flight cover, then the signup card.
-   Its head is cut straight from the LB mark and drawn into one silhouette with a
-   shaded, scaled body. The dragon is steered, not dragged: it always flies head-first
-   towards where the page says it should be, at a capped speed, turning in smooth arcs,
-   and its body follows the exact path its head took. Scroll back up and it turns round
-   and flies back up; fling the page and it glides in rather than snapping.
-   Landing spots are worked out from the real positions of those objects.
-   Purely decorative: aria-hidden, pointer-events off, and held still on the arch
-   for anyone who prefers reduced motion. */
+   Built from the Claude Design handoff ("Dragon Reference Sheet v2",
+   DRAGON_ANIMATION_SPEC.md): the procedural rig, colours and flight cycle are
+   the reference's own code, inlined here so the page still works straight
+   from a folder with no build step. Decorative: aria-hidden, no pointer
+   events, and still (standing on the arch) for anyone who prefers reduced motion. */
 (function () {
-  var HEAD_SRC = 'data:image/png;base64,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';
-  var HEAD_ATTACH_Y = 0.44;   // where the neck leaves the sprite (fraction of its height)
-  var HEAD_TILT = 13.2 * Math.PI / 180;  // snout points this far below the sprite's x-axis
-  var EYE = [0.557, 0.465];   // eye hole, fraction of the sprite
-  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+const COL = { body: '#2C5A85', dark: '#22476A', mem: '#8EA5B8', memBack: '#7690A7', memFar: '#6C879F', memFarBack: '#5F7B95', eye: '#FBF6EC', ink: '#33372C', clay: '#C97B4A', claw: '#16293F', clawFar: '#1A2E44', line: '#E3DAC4', surface: '#F3EEDF' };
+const RAD = Math.PI / 180, TAU = Math.PI * 2;
+const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+const mul = (a, s) => [a[0] * s, a[1] * s, a[2] * s];
+const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+const nrm = a => { const l = Math.hypot(a[0], a[1], a[2]) || 1; return mul(a, 1 / l); };
+const lerp = (a, b, t) => a + (b - a) * t;
+const a2 = (a, b) => [a[0] + b[0], a[1] + b[1]];
+const s2 = (a, b) => [a[0] - b[0], a[1] - b[1]];
+const m2 = (a, s) => [a[0] * s, a[1] * s];
+const d2 = (a, b) => a[0] * b[0] + a[1] * b[1];
+const n2 = a => { const l = Math.hypot(a[0], a[1]); return l < 1e-6 ? [1, 0] : [a[0] / l, a[1] / l]; };
+const f = n => (Math.round(n * 10) / 10).toString();
+const fp = p => f(p[0]) + ',' + f(p[1]);
+const fwdDir = (p, y) => [Math.cos(p * RAD) * Math.cos(y * RAD), Math.sin(p * RAD), Math.cos(p * RAD) * Math.sin(y * RAD)];
+const backDir = (p, y) => [-Math.cos(p * RAD) * Math.cos(y * RAD), Math.sin(p * RAD), -Math.cos(p * RAD) * Math.sin(y * RAD)];
+const bump = (i, a, b) => (i <= a || i >= b) ? 0 : Math.sin(Math.PI * (i - a) / (b - a));
+const warp = c => { c = ((c % 1) + 1) % 1; return c < 0.45 ? c / 0.45 * 0.5 : 0.5 + (c - 0.45) / 0.55 * 0.5; };
 
-  var cvs = document.createElement('canvas');
-  cvs.className = 'lb-dragon';
-  cvs.setAttribute('aria-hidden', 'true');
-  document.body.appendChild(cvs);
-  var ctx = cvs.getContext('2d');
-  var css = getComputedStyle(document.documentElement);
-  var BLUE = css.getPropertyValue('--blue').trim() || '#2C5A85';
-  var BLUE_DEEP = css.getPropertyValue('--blue-deep').trim() || '#1F4364';
-  var BLUE_LIT = css.getPropertyValue('--teal-lit').trim() || '#5C88AE';
-  var GOLD = css.getPropertyValue('--gold').trim() || '#F0C244';
-  var CANVAS = css.getPropertyValue('--canvas').trim() || '#FBF6EC';
+function ccr(a) {
+  const n = a.length; let d = 'M' + fp(a[0]);
+  for (let i = 0; i < n; i++) {
+    const p0 = a[(i - 1 + n) % n], p1 = a[i], p2 = a[(i + 1) % n], p3 = a[(i + 2) % n];
+    d += 'C' + f(p1[0] + (p2[0] - p0[0]) / 6) + ',' + f(p1[1] + (p2[1] - p0[1]) / 6) + ' ' + f(p2[0] - (p3[0] - p1[0]) / 6) + ',' + f(p2[1] - (p3[1] - p1[1]) / 6) + ' ' + fp(p2);
+  }
+  return d + 'Z';
+}
+function ocr(a) {
+  const n = a.length; let d = 'M' + fp(a[0]);
+  for (let i = 0; i < n - 1; i++) {
+    const p0 = a[Math.max(i - 1, 0)], p1 = a[i], p2 = a[i + 1], p3 = a[Math.min(i + 2, n - 1)];
+    d += 'C' + f(p1[0] + (p2[0] - p0[0]) / 6) + ',' + f(p1[1] + (p2[1] - p0[1]) / 6) + ' ' + f(p2[0] - (p3[0] - p1[0]) / 6) + ',' + f(p2[1] - (p3[1] - p1[1]) / 6) + ' ' + fp(p2);
+  }
+  return d;
+}
+function tube(P, wd) {
+  const n = P.length, L = [], R = [];
+  for (let i = 0; i < n; i++) {
+    const t = n2(s2(P[Math.min(i + 1, n - 1)], P[Math.max(i - 1, 0)])), nn = [-t[1], t[0]];
+    L.push(a2(P[i], m2(nn, wd[i]))); R.push(s2(P[i], m2(nn, wd[i])));
+  }
+  const te = n2(s2(P[n - 1], P[n - 2])), ts = n2(s2(P[1], P[0]));
+  return ccr([...L, a2(P[n - 1], m2(te, wd[n - 1] * 0.9)), ...R.reverse(), s2(P[0], m2(ts, wd[0] * 0.9))]);
+}
 
-  var head = null, headImg = new Image();
-  headImg.onload = function () {
-    var c = document.createElement('canvas');
-    c.width = headImg.width; c.height = headImg.height;
-    var x = c.getContext('2d');
-    x.drawImage(headImg, 0, 0);
-    x.globalCompositeOperation = 'source-in';
-    x.fillStyle = BLUE; x.fillRect(0, 0, c.width, c.height);
-    head = c;
+function buildPose(o) {
+  const fly = o.mode === 'fly', c = o.c || 0, t = o.t || 0, turn = o.turn || 0;
+  const cw = warp(c);
+  const bob = fly ? -5 * Math.cos(TAU * cw) : 1.4 * Math.sin(t * 1.5);
+  const A = [0, bob, 0];
+  const fwd = [{ p: A, h: 30, w: 26 }];
+  let p = A;
+  for (let i = 0; i < 8; i++) {
+    const u = i / 7;
+    const pitch = fly ? lerp(24, -2, u) - 3.5 * Math.sin(TAU * (cw - 0.12)) * (1 - u * 0.4) : lerp(74, 28, u) + 2.5 * Math.sin(t * 1.1 - u * 1.2);
+    p = add(p, mul(fwdDir(pitch, turn * 20 * u), 13));
+    fwd.push({ p, h: lerp(25, 11, u), w: lerp(21, 9.5, u) });
+  }
+  const hp = fly ? -6 + 2 * Math.sin(TAU * (cw - 0.25)) : -16 + 2 * Math.sin(t * 1.1 - 1.5);
+  [[13, 13.5, 10.5], [15, 11.5, 9], [16, 6.8, 5.8], [9, 2.4, 2.2]].forEach(([l, h, w], k) => {
+    p = add(p, mul(fwdDir(hp - (k >= 2 ? 5 : 0), turn * 26), l)); fwd.push({ p, h, w });
+  });
+  const back = []; p = A;
+  [[18, 31, 28], [18, 30.5, 28], [18, 29, 26], [18, 26, 23], [18, 22, 19.5], [16, 19, 16.5]].forEach(([l, h, w]) => {
+    p = add(p, mul(backDir(fly ? 3 : -2, -turn * 4), l)); back.push({ p, h, w });
+  });
+  const nT = 24;
+  for (let i = 0; i < nT; i++) {
+    const u = (i + 1) / nT;
+    let pitch, yaw = -turn * 38 * u;
+    if (fly) {
+      pitch = -3 + 13 * Math.pow(u, 1.2) * Math.sin(TAU * (c - u * 0.9));
+      yaw += 7 * u * Math.sin(TAU * (c * 0.5 - u * 0.7));
+    } else {
+      pitch = u < 0.3 ? lerp(-14, -44, u / 0.3) : u < 0.55 ? lerp(-44, -4, (u - 0.3) / 0.25) : lerp(-4, 24, (u - 0.55) / 0.45);
+      pitch += 5 * u * Math.sin(t * 0.9 - u * 3);
+    }
+    p = add(p, mul(backDir(pitch, yaw), 11.2));
+    const hh = 1 + 16 * Math.pow(1 - u, 1.15);
+    back.push({ p, h: hh, w: hh * 0.85, tail: u });
+  }
+  const spine = [...fwd].reverse().concat(back);
+  const legSegs = (segs, base, side) => { const pts = [base]; let q = base; segs.forEach(([l, a]) => { q = add(q, mul(nrm([Math.cos(a * RAD), Math.sin(a * RAD), side * 0.08]), l)); pts.push(q); }); return pts; };
+  const frames = () => spine.forEach((j, i) => {
+    const T = nrm(sub(spine[Math.min(i + 1, spine.length - 1)].p, spine[Math.max(i - 1, 0)].p));
+    const U = nrm(sub([0, 1, 0], mul(T, T[1])));
+    const S = nrm(sub(sub([0, 0, 1], mul(T, T[2])), mul(U, dot([0, 0, 1], U))));
+    j.T = T; j.U = U; j.S = S;
+  });
+  frames();
+  const at = (i, uk, sk, side) => { const j = spine[i]; return add(add(j.p, mul(j.U, j.h * uk)), mul(j.S, side * j.w * sk)); };
+  const legs = [];
+  const sw = fly ? 6 * Math.sin(TAU * (cw - 0.3)) : 0;
+  [-1, 1].forEach(side => {
+    if (fly) {
+      legs.push({ side, pts: legSegs([[30, -115 + sw], [27, -32 + sw], [15, -70 + sw]], at(13, -0.3, 0.55, side), side), wd: [12.5, 7.5, 5.4, 4.4] });
+      legs.push({ side, pts: legSegs([[42, -142 + sw], [40, -176 + sw * 1.5], [22, -188 + sw * 2]], at(18, -0.25, 0.6, side), side), wd: [17, 9.5, 6.4, 5] });
+    } else {
+      const k = side > 0 ? 0 : 6;
+      legs.push({ side, pts: legSegs([[50, -100 + k], [46, -80 + k * 0.5], [16, -2]], at(13, -0.3, 0.55, side), side), wd: [14, 8.5, 6.5, 4] });
+      legs.push({ side, pts: legSegs([[50, -45 - k], [44, -125 + k], [22, -80], [18, -2]], at(18, -0.25, 0.6, side), side), wd: [20, 11.5, 7.5, 6, 3.5] });
+    }
+  });
+  let ground = null;
+  if (!fly) {
+    ground = Math.min(...legs.map(l => l.pts[l.pts.length - 1][1])) - 3;
+    spine.forEach((j, i) => { if (i > 18 && j.p[1] - j.h * 0.9 < ground) j.p = [j.p[0], ground + j.h * 0.9, j.p[2]]; });
+    frames();
+  }
+  const R = x => 10 + 48 * Math.cos(TAU * x);
+  const fold = fly ? 0.26 * Math.max(0, Math.sin(TAU * (cw - 0.5))) : 1;
+  const wings = [-1, 1].map(side => {
+    const r0 = fly ? R(cw) : 60 + 1.5 * Math.sin(t * 1.5), r1 = fly ? R(cw - 0.06) : r0, r2 = fly ? R(cw - 0.13) : r0;
+    const lat = r => [0, Math.sin(r * RAD), side * Math.cos(r * RAD)];
+    const bone = (from, len, al, r) => add(from, mul(add(mul(lat(r), Math.cos(al * RAD)), [Math.sin(al * RAD), 0, 0]), len));
+    const sh = at(13, 0.82, 0.32, side);
+    const el = bone(sh, 70, fly ? lerp(-25, -78, fold) : -58, r0);
+    const wr = bone(el, 118, fly ? lerp(22, 96, fold) : 64, r1);
+    const spread = [-8, -36, -64, -96], folded = [-166, -170, -174, -178], lens = fly ? [215, 192, 160, 122] : [150, 134, 116, 94], restAl = [-97, -103, -109, -116];
+    const mids = [], tips = [];
+    spread.forEach((s, k) => { const al = fly ? lerp(s, folded[k], fold) : restAl[k]; const m = bone(wr, lens[k] * 0.55, al, (r1 + r2) / 2); mids.push(m); tips.push(bone(m, lens[k] * 0.45, al - 5 * (1 - fold), r2)); });
+    const thumb = bone(wr, 15, fly ? lerp(70, 120, fold) : 40, r1);
+    return { side, sh, el, wr, mids, tips, thumb, nA: at(10, 0.6, 0.3, side), hip: at(19, 0.7, 0.3, side), lead: add(el, [12, 0, 0]) };
+  });
+  const horns = [];
+  [-1, 1].forEach(side => {
+    const sj = spine[3], Th = nrm(sub(spine[4].p, spine[3].p));
+    const mk = (uk, sk, b0, b1, lens, wd) => { let q = add(add(sj.p, mul(sj.U, sj.h * uk)), mul(sj.S, side * sj.w * sk)); const pts = [q]; lens.forEach((l, k) => { const b = lerp(b0, b1, k / (lens.length - 1)) * RAD; q = add(q, mul(nrm(add(add(mul(Th, Math.cos(b)), mul(sj.U, Math.sin(b))), mul(sj.S, side * 0.28))), l)); pts.push(q); }); return { side, pts, wd }; };
+    horns.push(mk(0.62, 0.42, 34, 2, [11, 11, 10, 9], [5, 4.2, 3.2, 2, 0.3]));
+    horns.push(mk(0.15, 0.75, 12, -8, [8, 8, 7], [3.6, 2.8, 1.8, 0.3]));
+  });
+  return { spine, legs, wings, horns, ground };
+}
+
+const CAMS = {
+  side: p => [p[0], -p[1], p[2]],
+  top: p => [-p[2], -p[0], p[1]],
+  front: p => { const b = 14 * RAD; return [p[2], -(p[1] * Math.cos(b) - p[0] * Math.sin(b)), p[1] * Math.sin(b) + p[0] * Math.cos(b)]; },
+  threeq: p => { const a = 35 * RAD, b = 20 * RAD; const x = p[0] * Math.cos(a) - p[2] * Math.sin(a), z = p[0] * Math.sin(a) + p[2] * Math.cos(a), y = p[1]; return [x, -(y * Math.cos(b) - z * Math.sin(b)), y * Math.sin(b) + z * Math.cos(b)]; },
+};
+const rotX = (p, r) => { const c = Math.cos(r * RAD), s = Math.sin(r * RAD); return [p[0], p[1] * c - p[2] * s, p[1] * s + p[2] * c]; };
+
+function render(o) {
+  const pose = buildPose(o), cam = CAMS[o.view], sk = !!o.skeleton;
+  const C = p => cam(rotX(p, o.roll || 0));
+  const pts = [];
+  const P = p => { const q = C(p); pts.push(q); return [q[0], q[1]]; };
+  const near = side => C([0, 0, side])[2] >= -0.01;
+  const col = sk ? { body: COL.line, dark: COL.line, mem: COL.surface, memBack: COL.surface, memFar: COL.surface, memFarBack: COL.surface } : COL;
+  const items = [];
+  const id = o.id || 'd';
+
+  const sp = pose.spine.map(j => { const q = C(j.p); pts.push(q); const u = C(j.U), s = C(j.S); return { P: [q[0], q[1]], d: q[2], u: [u[0], u[1]], s: [s[0], s[1]], h: j.h, w: j.w }; });
+  const n = sp.length;
+  sp.forEach((j, i) => {
+    const t = n2(s2(sp[Math.min(i + 1, n - 1)].P, sp[Math.max(i - 1, 0)].P));
+    j.t = t; j.n = [-t[1], t[0]];
+    j.e = Math.max(0.6, Math.hypot(j.h * d2(j.u, j.n), j.w * d2(j.s, j.n)));
+    const g = d2(j.u, j.n); j.sg = Math.abs(g) < 0.12 ? 1 : Math.sign(g);
+    j.tb = n2(s2(sp[Math.min(i + 1, n - 1)].P, sp[Math.max(i - 1, 0)].P));
+  });
+
+  if (o.view === 'front') {
+    sp.forEach(j => items.push({ d: j.d, s: `<ellipse rx="1" ry="1" transform="matrix(${f(j.s[0] * j.w)},${f(j.s[1] * j.w)},${f(j.u[0] * j.h)},${f(j.u[1] * j.h)},${f(j.P[0])},${f(j.P[1])})" fill="${col.body}"/>` }));
+    if (!sk) {
+      const hj = pose.spine[2], sj = pose.spine[0];
+      let face = '';
+      [-1, 1].forEach(side => {
+        const e = P(add(add(hj.p, mul(hj.S, side * hj.w * 0.62)), mul(hj.U, hj.h * 0.35)));
+        face += `<path d="M${fp(a2(e, [-4.5 * side, 0.5]))}Q${fp(a2(e, [0, -3]))} ${fp(a2(e, [4.5 * side, -1.2]))}Q${fp(a2(e, [0, 2]))} ${fp(a2(e, [-4.5 * side, 0.5]))}Z" fill="${COL.eye}"/><path d="M${fp(a2(e, [0, -1.8]))}L${fp(a2(e, [0, 1.2]))}" stroke="${COL.ink}" stroke-width="1.4" stroke-linecap="round"/>`;
+        const ns = P(add(add(sj.p, mul(sj.S, side * 3)), mul(sj.U, 1)));
+        face += `<circle cx="${f(ns[0])}" cy="${f(ns[1])}" r="1.2" fill="${COL.dark}"/>`;
+        const ch = sp[4];
+      });
+      items.push({ d: sp[0].d + 1, s: face });
+    }
+  } else {
+    const L = sp.map(j => a2(j.P, m2(j.n, j.e))), Rr = sp.map(j => s2(j.P, m2(j.n, j.e)));
+    const bodyD = ccr([...L, ...Rr.reverse()]);
+    let s = `<path d="${bodyD}" fill="${col.body}"/>`;
+    if (!sk) {
+      const cid = id + '-clip';
+      s += `<clipPath id="${cid}"><path d="${bodyD}"/></clipPath><g clip-path="url(#${cid})">`;
+      if (o.view === 'top') {
+        const a = [], b = [];
+        for (let i = 2; i < 40; i++) { const k = 0.3 * bump(i, 1, 41) + 0.04; a.push(a2(sp[i].P, m2(sp[i].n, sp[i].e * k))); b.push(s2(sp[i].P, m2(sp[i].n, sp[i].e * k))); }
+        s += `<path d="${ccr([...a, ...b.reverse()])}" fill="${COL.dark}"/>`;
+      } else {
+        const top = [], ti = [];
+        for (let i = 2; i < 41; i++) { const j = sp[i], nu = m2(j.n, j.sg); top.push(a2(j.P, m2(nu, j.e * 1.05))); ti.push(a2(j.P, m2(nu, j.e * (1 - 0.32 * bump(i, 1, 42))))); }
+        s += `<path d="${ccr([...top, ...ti.reverse()])}" fill="${COL.dark}"/>`;
+        const bo = [], bi = [], plates = [];
+        for (let i = 6; i < 34; i++) {
+          const j = sp[i], nd = m2(j.n, -j.sg), k = bump(i, 5, 34);
+          const pb = a2(j.P, m2(nd, j.e * 1.05)), pi = a2(j.P, m2(nd, j.e * (1 - 0.55 * k)));
+          bo.push(pb); bi.push(pi);
+          if (i > 7 && i < 32) plates.push(`M${fp(a2(j.P, m2(nd, j.e)))}L${fp(a2(j.P, m2(nd, j.e * (1 - 0.5 * k))))}`);
+        }
+        s += `<path d="${ccr([...bo, ...bi.reverse()])}" fill="${COL.mem}"/><path d="${plates.join('')}" stroke="${COL.body}" stroke-width="1" opacity=".45" fill="none"/>`;
+      }
+      s += `</g>`;
+      const spikes = [];
+      const spike = (base, nu, tb, len, bw, fill) => { const b1 = s2(base, m2(tb, bw)), b2 = a2(base, m2(tb, bw)); const tip = a2(base, a2(m2(nu, len * 0.8), m2(tb, len * 0.9))); const cc = a2(m2(a2(b1, tip), 0.5), m2(nu, len * 0.2)); return `<path d="M${fp(b1)}Q${fp(cc)} ${fp(tip)}L${fp(b2)}Z" fill="${fill}"/>`; };
+      for (let i = 4; i <= 40; i++) {
+        const j = sp[i], seg = Math.hypot(...s2(sp[i + 1].P, j.P));
+        const len = i <= 11 ? lerp(16, 9, (i - 4) / 7) : i <= 18 ? 7.5 : 7 * (1 - (i - 19) / 24) + 1.6;
+        if (o.view === 'top') { if (i % 2 === 0) spikes.push(`<path d="M${fp(a2(j.P, m2(j.n, 2.2)))}L${fp(a2(j.P, m2(j.tb, len * 0.7)))}L${fp(s2(j.P, m2(j.n, 2.2)))}Z" fill="${COL.mem}"/>`); }
+        else { const nu = m2(j.n, j.sg); spikes.push(spike(a2(j.P, m2(nu, j.e - 1.5)), nu, j.tb, len, Math.max(2, seg * 0.42), COL.dark)); }
+      }
+      s += spikes.join('');
+      if (o.view !== 'top') {
+        const hj = sp[2], nu = m2(hj.n, hj.sg), tf = n2(s2(sp[1].P, sp[2].P));
+        const ec = a2(a2(hj.P, m2(nu, hj.e * 0.3)), m2(tf, -1));
+        s += `<path d="M${fp(s2(ec, m2(tf, 5.5)))}Q${fp(a2(ec, m2(nu, 3.4)))} ${fp(a2(ec, m2(tf, 4.5)))}Q${fp(s2(ec, m2(nu, 1.8)))} ${fp(s2(ec, m2(tf, 5.5)))}Z" fill="${COL.eye}"/>`;
+        s += `<path d="M${fp(a2(a2(ec, m2(tf, 0.6)), m2(nu, 2.3)))}L${fp(s2(a2(ec, m2(tf, 0.6)), m2(nu, 1.3)))}" stroke="${COL.ink}" stroke-width="1.5" stroke-linecap="round"/>`;
+        s += `<path d="M${fp(a2(s2(ec, m2(tf, 7)), m2(nu, 4)))}Q${fp(a2(ec, m2(nu, 7.5)))} ${fp(a2(a2(ec, m2(tf, 7)), m2(nu, 3.2)))}" stroke="${COL.dark}" stroke-width="2.4" stroke-linecap="round" fill="none"/>`;
+        const jaw = [0, 1, 2, 3].map(i => { const j = sp[i]; return s2(j.P, m2(m2(j.n, j.sg), j.e * (i === 3 ? 0.05 : 0.22))); });
+        s += `<path d="${ocr(jaw)}" stroke="${COL.dark}" stroke-width="1.6" stroke-linecap="round" fill="none"/>`;
+        const ns = a2(a2(sp[1].P, m2(m2(sp[1].n, sp[1].sg), sp[1].e * 0.42)), m2(tf, 2));
+        s += `<circle cx="${f(ns[0])}" cy="${f(ns[1])}" r="1.3" fill="${COL.dark}"/>`;
+        [3, 4].forEach((i, k) => { const j = sp[i], nd = m2(j.n, -j.sg); s += spike(a2(j.P, m2(nd, j.e - 1.5)), nd, j.tb, k ? 8 : 12, 3, COL.body); });
+      }
+    }
+    items.push({ d: 0, s });
+  }
+
+  pose.legs.forEach(l => {
+    const P2 = l.pts.map(P), nr = near(l.side), dd = C(l.pts[0])[2];
+    items.push({ d: dd, s: `<path d="${tube(P2, l.wd)}" fill="${nr ? col.body : col.dark}"/>` + (sk ? '' : claws(P2, o.view, l.wd[0] > 15 ? 13 : 11, nr ? COL.claw : COL.clawFar, nr ? col.body : col.dark)) });
+  });
+  pose.horns.forEach(h => {
+    const P2 = h.pts.map(P);
+    items.push({ d: o.view === 'front' ? sp[3].d - 2 : C(h.pts[0])[2], s: `<path d="${tube(P2, h.wd)}" fill="${near(h.side) || o.view === 'top' ? col.body : col.dark}"/>` });
+  });
+  pose.wings.forEach(w => {
+    const sh = P(w.sh), el = P(w.el), wr = P(w.wr), nA = P(w.nA), hip = P(w.hip), lead = P(w.lead), tips = w.tips.map(P), mids = w.mids.map(P), th = P(w.thumb);
+    const sag = (a, b, toward, k) => P(add(mul(add(a, b), 0.5), mul(sub(toward, mul(add(a, b), 0.5)), k)));
+    const c1 = s2(m2(mids[0], 2), m2(a2(wr, tips[0]), 0.5));
+    let d = `M${fp(nA)}Q${fp(lead)} ${fp(wr)}Q${fp(c1)} ${fp(tips[0])}`;
+    for (let k = 1; k < 4; k++) d += `Q${fp(sag(w.tips[k - 1], w.tips[k], w.wr, 0.24))} ${fp(tips[k])}`;
+    d += `Q${fp(sag(w.tips[3], w.hip, w.el, 0.28))} ${fp(hip)}L${fp(sh)}Z`;
+    const N = mul(nrm(cross(sub(w.wr, w.sh), sub(w.tips[2], w.sh))), -w.side);
+    const topFace = C(N)[2] >= 0, nr = near(w.side);
+    const memC = nr ? (topFace ? col.mem : col.memBack) : (topFace ? col.memFar : col.memFarBack);
+    const boneC = nr ? col.body : col.dark;
+    let s = `<path d="${d}" fill="${memC}"/>`;
+    if (!sk) {
+      s += `<path d="${tube([sh, el, wr], [6.5, 5, 4.2])}" fill="${boneC}"/>`;
+      tips.forEach((tp, k) => { s += `<path d="${tube([wr, mids[k], tp], k === 0 ? [3.8, 2.4, 0.6] : [3.2, 2, 0.5])}" fill="${boneC}"/>`; });
+      s += `<path d="${tube([wr, th], [3, 0.3])}" fill="${boneC}"/>`;
+    }
+    items.push({ d: o.view === 'top' ? -60 : o.view === 'front' ? C(w.sh)[2] : (nr ? 1e3 : -1e3), s });
+  });
+
+  if (pose.ground != null && o.groundLine) {
+    const g1 = C([-420, pose.ground, 0]), g2 = C([200, pose.ground, 0]);
+    items.push({ d: -1e4, s: `<line x1="${f(g1[0])}" y1="${f(g1[1])}" x2="${f(g2[0])}" y2="${f(g2[1])}" stroke="${COL.line}" stroke-width="2"/>` });
+  }
+  items.sort((a, b) => a.d - b.d);
+  let out = items.map(i => i.s).join('');
+
+  if (sk) {
+    let k = `<path d="${ocr(sp.map(j => j.P))}" stroke="${COL.ink}" stroke-width="1.3" fill="none"/>`;
+    sp.forEach((j, i) => { if (i % 2 === 0) k += `<circle cx="${f(j.P[0])}" cy="${f(j.P[1])}" r="1.8" fill="${COL.ink}"/>`; });
+    pose.legs.forEach(l => { const q = l.pts.map(P); k += `<path d="M${q.map(fp).join('L')}" stroke="${COL.ink}" stroke-width="1.3" fill="none"/>`; q.forEach(z => k += `<circle cx="${f(z[0])}" cy="${f(z[1])}" r="1.8" fill="${COL.ink}"/>`); });
+    pose.wings.forEach(w => { const a = [w.sh, w.el, w.wr].map(P); k += `<path d="M${a.map(fp).join('L')}" stroke="${COL.body}" stroke-width="2" fill="none"/>`; w.tips.forEach((tp, i) => { k += `<path d="M${fp(a[2])}L${fp(P(w.mids[i]))}L${fp(P(tp))}" stroke="${COL.body}" stroke-width="1.3" fill="none"/>`; }); });
+    const pv = [];
+    const nw = pose.wings.find(w => near(w.side)) || pose.wings[1];
+    pv.push([P(nw.sh), 'Shoulder'], [P(nw.el), 'Elbow'], [P(nw.wr), 'Wrist'], [sp[11].P, 'Neck'], [sp[3].P, 'Head'], [sp[18].P, 'Hip'], [sp[30].P, 'Tail']);
+    pv.forEach(([q, lbl]) => {
+      k += `<circle cx="${f(q[0])}" cy="${f(q[1])}" r="5.5" fill="${COL.eye}" stroke="${COL.clay}" stroke-width="2.2"/>`;
+      if (o.labels) k += `<text x="${f(q[0])}" y="${f(q[1] + 20)}" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="12" font-weight="700" fill="${COL.ink}" stroke="${COL.eye}" stroke-width="4" paint-order="stroke">${lbl}</text>`;
+    });
+    out += k;
+  }
+  return { out, pts };
+}
+function cross(a, b) { return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]; }
+
+
+
+function claws(P2, view, s, fill, foot) {
+  const n = P2.length, b = P2[n - 1], dir = n2(s2(b, P2[n - 2]));
+  let nn = [-dir[1], dir[0]]; if (view !== 'top' && nn[1] < 0) nn = m2(nn, -1);
+  const rot = (v, a) => [v[0] * Math.cos(a) - v[1] * Math.sin(a), v[0] * Math.sin(a) + v[1] * Math.cos(a)];
+  const claw = (base, dd, len, w) => {
+    const pn = [-dd[1], dd[0]], tip = a2(a2(base, m2(dd, len * 0.62)), m2(nn, len * 0.82));
+    const b1 = a2(base, m2(pn, w)), b2 = s2(base, m2(pn, w));
+    const o = a2(a2(base, m2(dd, len * 0.95)), m2(nn, len * 0.12)), i = a2(a2(base, m2(dd, len * 0.42)), m2(nn, len * 0.38));
+    const [p1, p2] = d2(s2(b1, base), nn) < 0 ? [b1, b2] : [b2, b1];
+    return `<path d="M${fp(p1)}Q${fp(o)} ${fp(tip)}Q${fp(i)} ${fp(p2)}Z" fill="${fill}"/>`;
   };
-  headImg.src = HEAD_SRC;
+  const heel = a2(b, m2(dir, s * 0.15));
+  let out = `<path d="${tube([s2(b, m2(dir, s * 0.35)), heel, a2(heel, m2(dir, s * 0.45))], [s * 0.42, s * 0.5, s * 0.44])}" fill="${foot}"/>`;
+  out += claw(s2(a2(b, m2(dir, -s * 0.15)), m2(nn, -s * 0.2)), rot(dir, Math.PI * 0.92), s * 0.55, s * 0.12);
+  [[-0.5, 0.82], [0.05, 1], [0.5, 0.86]].forEach(([a, k]) => {
+    const dd = rot(dir, a), r0 = a2(heel, m2(dd, s * 0.3));
+    const m = a2(a2(r0, m2(dd, s * 0.6 * k)), m2(nn, s * 0.1)), e = a2(a2(m, m2(dd, s * 0.5 * k)), m2(nn, s * 0.16));
+    out += `<path d="${tube([r0, m, e], [s * 0.3, s * 0.25, s * 0.2])}" fill="${foot}"/>`;
+    out += `<circle cx="${f(m[0])}" cy="${f(m[1])}" r="${f(s * 0.27)}" fill="${foot}"/>`;
+    out += claw(s2(e, m2(dd, s * 0.06)), n2(a2(dd, m2(nn, 0.25))), s * 0.95 * k, s * 0.2);
+  });
+  return out;
+}
+function _svgWrap(opts, vb) { return `<svg viewBox="${vb}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:100%;overflow:visible">${render(opts).out}</svg>`; }
+function renderDragonSVG(opts, viewBox) {
+  const { out } = render(opts);
+  return `<svg viewBox="${viewBox || computeViewBox(opts)}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:100%;overflow:visible">${out}</svg>`;
+}
 
-  /* ---------- geometry helpers ---------- */
+// Stable viewBox covering a full wingbeat (and banking, if rollSample), so the drawing never jumps.
+const _vbCache = {};
+function computeViewBox(base, pad = 20, square = false, rollSample = false) {
+  const key = JSON.stringify([base.view, base.mode, pad, square, rollSample]);
+  if (_vbCache[key]) return _vbCache[key];
+  let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+  for (let i = 0; i < 16; i++) {
+    const { pts } = render({ ...base, c: i / 16, t: i * 0.7, roll: rollSample ? (i % 3 - 1) * 30 : 0 });
+    pts.forEach(p => { x0 = Math.min(x0, p[0]); y0 = Math.min(y0, p[1]); x1 = Math.max(x1, p[0]); y1 = Math.max(y1, p[1]); });
+  }
+  if (square) { const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2, r = Math.max(x1 - x0, y1 - y0) / 2; x0 = cx - r; x1 = cx + r; y0 = cy - r; y1 = cy + r; }
+  return (_vbCache[key] = `${f(x0 - pad)} ${f(y0 - pad)} ${f(x1 - x0 + pad * 2)} ${f(y1 - y0 + pad * 2)}`);
+}
+
+  /* ======================================================================
+     Page behaviour. The rig above is the reference design's, unchanged
+     except that the stand pose's ground line is off. Below: where the
+     dragon should be, and how it gets there.
+     - Home: standing on top of the arched window in the hero.
+     - Scrolling down: flies down the page, drifting side to side, and lands
+       on each book, the Fall Before Flight cover and the signup card.
+     - Scrolling up: turns round and flies back up, nose-up, to the perch
+       above on its own line instead of rewinding.
+     - It is steered, not dragged: capped speed and smooth turns, so a fast
+       scroll makes it glide to catch up; a long jump brings it in from
+       just off-screen.
+     - Side view while following the scroll; top view only for a click swoop.
+     ====================================================================== */
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var FLAP = 1.1;                         // seconds per wingbeat
+  var VB_SIDE = [-400, -360, 580, 560];   // fixed frame that fits the whole wingbeat and the stand pose
+  var VB_TOP = [-400, -400, 800, 800];
+  var vbs = VB_SIDE.join(' '), vbt = VB_TOP.join(' ');
+
+  var wrap = document.createElement('div');
+  wrap.className = 'lb-dragon';
+  wrap.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(wrap);
+
+  var S = 0.36, K = 1;                    // S: px per rig unit; K: speed/size factor for small screens
+  var perches = [];
   function docRect(el) {
     var r = el.getBoundingClientRect();
-    return { l: r.left + scrollX, t: r.top + scrollY, r: r.right + scrollX, b: r.bottom + scrollY, w: r.width, h: r.height };
+    return { l: r.left + scrollX, t: r.top + scrollY, w: r.width, h: r.height };
   }
-  function lerp(a, b, t) { return a + (b - a) * t; }
-  function ease(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
-
-  var K = 1;            // overall scale (smaller on phones)
-  var route = [];       // dense polyline {x,y,s}
-  var keys = [];        // {scroll, s, el?}
-  var perches = [];
-
-  function addPt(x, y) {
-    var edge = 28 * K, vw = document.documentElement.clientWidth;
-    x = Math.max(edge, Math.min(vw - edge, x));
-    var last = route[route.length - 1];
-    if (last) {
-      var d = Math.hypot(x - last.x, y - last.y);
-      if (d < 0.5) return;
-      route.push({ x: x, y: y, s: last.s + d });
-    } else route.push({ x: x, y: y, s: 0 });
-  }
-
-  // A resting pose: body draped along the top edge of an element in soft humps.
-  function perchOn(el, fromFrac, toFrac) {
-    var r = docRect(el), lift = 11 * K;
-    var x0 = r.l + r.w * fromFrac, x1 = r.l + r.w * toFrac;
-    return { el: el, pts: function (n) {
-      var out = [];
-      for (var i = 0; i <= n; i++) {
-        var t = i / n;
-        var hump = Math.abs(Math.sin(t * Math.PI * 2.5)) * 9 * K * (1 - t * .6);
-        out.push([lerp(x0, x1, t), r.t - lift - hump]);
-      }
-      return out;
-    } };
-  }
-
-  // Curled over the arched window in the hero (arch geometry from its SVG viewBox).
-  function perchOnArch(svg) {
-    var r = docRect(svg), sc = r.w / 360;
-    var cx = r.l + 180 * sc, cy = r.t + 178 * sc, rad = 160 * sc + 11 * K;
-    return { el: null, pts: function (n) {
-      var out = [];
-      for (var i = 0; i <= n; i++) {
-        var a = lerp(188, 300, i / n) * Math.PI / 180;
-        out.push([cx + rad * Math.cos(a), cy + rad * Math.sin(a)]);
-      }
-      return out;
-    } };
-  }
-
-  // Flight between perches: a Hermite sweep with a travelling S-wave laid over it.
-  function fly(p0, d0, p1, d1) {
-    var dist = Math.hypot(p1[0] - p0[0], p1[1] - p0[1]);
-    var m = Math.max(220 * K, dist * 0.75);
-    var halfWaves = Math.max(2, Math.round(dist / (190 * K)));
-    var amp = Math.min(70, 26 + dist * 0.05) * K;
-    var n = Math.ceil(dist / 3) + 40;
-    var prev = p0;
-    for (var i = 1; i <= n; i++) {
-      var t = i / n, t2 = t * t, t3 = t2 * t;
-      var h00 = 2 * t3 - 3 * t2 + 1, h10 = t3 - 2 * t2 + t, h01 = -2 * t3 + 3 * t2, h11 = t3 - t2;
-      var x = h00 * p0[0] + h10 * m * d0[0] + h01 * p1[0] + h11 * m * d1[0];
-      var y = h00 * p0[1] + h10 * m * d0[1] + h01 * p1[1] + h11 * m * d1[1];
-      var tx = x - prev[0], ty = y - prev[1], tl = Math.hypot(tx, ty) || 1;
-      var off = amp * Math.sin(t * Math.PI * halfWaves) * Math.sin(t * Math.PI);
-      addPt(x - ty / tl * off, y + tx / tl * off);
-      prev = [x, y];
-    }
-  }
+  function ease(x) { return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+  function wrapA(a) { while (a > Math.PI) a -= TAU; while (a < -Math.PI) a += TAU; return a; }
+  // how far below the rig's origin the feet stand (rig units), for the current breath
+  function feetDrop(t) { return -buildPose({ mode: 'stand', t: t }).ground + 2; }
 
   function build() {
-    route = []; keys = []; perches = [];
-    var vw = innerWidth, vh = innerHeight;
-    K = vw < 640 ? 0.72 : 1;
+    perches = [];
+    var vw = document.documentElement.clientWidth, vh = innerHeight;
+    var small = vw < 600;
+    S = small ? 0.25 : 0.36; K = small ? 0.75 : 1;
+    var spots = [];
     var arch = document.querySelector('.lb-hero__art svg');
-    var seq = [];
-    if (arch && arch.getBoundingClientRect().width > 40) seq.push(perchOnArch(arch));
+    if (arch && arch.getBoundingClientRect().width > 40) {
+      var r = docRect(arch), sc = r.w / 360;   // apex of the arch's outer frame, from its viewBox
+      spots.push({ el: null, x: r.l + 180 * sc, y: r.t + 18.5 * sc });
+    }
     document.querySelectorAll('.lb-books .lb-book').forEach(function (b) {
-      seq.push(perchOn(b.querySelector('.lb-book__stage') || b, 0.06, 0.8));
+      var r = docRect(b.querySelector('.lb-book__stage') || b);
+      spots.push({ el: b, x: r.l + r.w * 0.5, y: r.t });
     });
     var mat = document.querySelector('.lb-feature-cover');
-    if (mat) seq.push(perchOn(mat, 0.05, 0.85));
+    if (mat) { var m = docRect(mat); spots.push({ el: mat, x: m.l + m.w * 0.5, y: m.t }); }
     var card = document.querySelector('#signup-home .lb-card');
-    if (card) seq.push(perchOn(card, 0.04, 0.3));
-    if (!seq.length) return;
+    if (card) { var c = docRect(card); spots.push({ el: card, x: c.l + Math.min(c.w * 0.2, 220), y: c.t }); }
+    if (!spots.length) return;
 
+    // Land when the perch's top edge is ~70% down the screen; perches on one row
+    // (the three books) are visited in quick hops while the row is still in view.
     var maxScroll = Math.max(1, document.documentElement.scrollHeight - vh);
-    // Land when the object's top edge is ~70% down the screen; objects on the same row
-    // (the three books) are visited in quick hops so the row is still in view.
     var land = 0.7 * vh, dwell = Math.max(70, 0.1 * vh), hop = Math.max(90, 0.12 * vh), minFly = Math.max(150, 0.24 * vh);
-    var lastPt = null, lastDir = null, lastLeave = -Infinity, lastY = null;
-
-    seq.forEach(function (p, idx) {
-      var pts = p.pts(40);
-      var a = pts[0], b = pts[pts.length - 1];
-      var da = [pts[1][0] - a[0], pts[1][1] - a[1]], la = Math.hypot(da[0], da[1]) || 1;
-      da = [da[0] / la, da[1] / la];
-      if (lastPt) {
-        // take off along the perch, and glide in low and level for the landing
-        var off = 34 * K, run = 80 * K;
-        var p0 = [lastPt[0] + lastDir[0] * off, lastPt[1] + lastDir[1] * off];
-        var p1 = [a[0] - da[0] * run, a[1] - da[1] * run];
-        var to = [p1[0] - p0[0], p1[1] - p0[1]], tl = Math.hypot(to[0], to[1]) || 1;
-        var d0 = [lastDir[0] * 0.6 + to[0] / tl, lastDir[1] * 0.6 + to[1] / tl], dl = Math.hypot(d0[0], d0[1]) || 1;
-        addPt(p0[0], p0[1]);
-        fly(p0, [d0[0] / dl, d0[1] / dl], p1, da);
-      } else {
-        // lead-in so the tail has somewhere to lie before the first perch
-        for (var j = 60; j > 0; j--) addPt(a[0] - da[0] * j * 5, a[1] - da[1] * j * 5);
-      }
-      pts.forEach(function (q) { addPt(q[0], q[1]); });
-      var s = route[route.length - 1].s;
-      var sameRow = lastY !== null && Math.abs(b[1] - lastY) < 40;
-      var arrive = idx === 0 ? 0 : Math.max(b[1] - land, lastLeave + (sameRow ? hop : minFly));
-      var leave = idx === 0 ? Math.min(60, dwell) : arrive + dwell;
-      keys.push({ scroll: arrive, s: s, el: p.el }, { scroll: leave, s: s, el: p.el });
-      perches.push({ el: p.el, pts: pts, arrive: arrive, leave: leave });
-      lastLeave = leave; lastY = b[1];
-      var db = [b[0] - pts[pts.length - 2][0], b[1] - pts[pts.length - 2][1]], lb = Math.hypot(db[0], db[1]) || 1;
-      lastPt = b; lastDir = [db[0] / lb, db[1] / lb];
+    var lastLeave = -Infinity, lastY = null;
+    spots.forEach(function (s, i) {
+      var sameRow = lastY !== null && Math.abs(s.y - lastY) < 40;
+      var arrive = i === 0 ? 0 : Math.max(s.y - land, lastLeave + (sameRow ? hop : minFly));
+      var leave = i === 0 ? Math.min(60, dwell) : arrive + dwell;
+      perches.push({ el: s.el, x: s.x, y: s.y, arrive: arrive, leave: leave });
+      lastLeave = leave; lastY = s.y;
     });
-    // squeeze the timeline into the scroll that actually exists
-    var lastArrive = keys[keys.length - 2].scroll;
+    var lastArrive = perches[perches.length - 1].arrive;
     if (lastArrive > maxScroll) {
       var f = maxScroll / lastArrive;
-      keys.forEach(function (k) { k.scroll *= f; });
       perches.forEach(function (p) { p.arrive *= f; p.leave *= f; });
     }
   }
 
-  function sForScroll(y) {
-    if (!keys.length) return 0;
-    if (y <= keys[0].scroll) return keys[0].s;
-    for (var i = 0; i < keys.length - 1; i++) {
-      var a = keys[i], b = keys[i + 1];
-      if (y <= b.scroll) {
-        if (a.s === b.s) return a.s;
-        return lerp(a.s, b.s, ease((y - a.scroll) / Math.max(1, b.scroll - a.scroll)));
-      }
-    }
-    return keys[keys.length - 1].s;
-  }
-
-  function at(s) {
-    var n = route.length;
-    if (s <= 0) { var a = route[0], b = route[1]; var l = b.s || 1; return [a.x + (b.x - a.x) / l * s, a.y + (b.y - a.y) / l * s]; }
-    if (s >= route[n - 1].s) return [route[n - 1].x, route[n - 1].y];
-    var lo = 0, hi = n - 1;
-    while (hi - lo > 1) { var mid = (lo + hi) >> 1; if (route[mid].s < s) lo = mid; else hi = mid; }
-    var p = route[lo], q = route[hi], t = (s - p.s) / ((q.s - p.s) || 1);
-    return [lerp(p.x, q.x, t), lerp(p.y, q.y, t)];
-  }
-
-  /* ---------- where the dragon should be ---------- */
-  // Resting on a perch while the page is inside that perch's scroll window;
-  // otherwise, flying towards the point on the route that matches the scroll.
   function perchFor(y) {
     if (!perches.length) return -1;
     if (y <= perches[0].leave) return 0;
     if (y >= perches[perches.length - 1].arrive) return perches.length - 1;
-    for (var i = 0; i < perches.length; i++) {
-      if (y >= perches[i].arrive - 0.5 && y <= perches[i].leave + 0.5) return i;
-    }
+    for (var i = 0; i < perches.length; i++) if (y >= perches[i].arrive - 0.5 && y <= perches[i].leave + 0.5) return i;
     return -1;
   }
-
-  /* ---------- the flying head and the path it leaves ---------- */
-  var headPos = null, heading = 0, speed = 0, phase = 0;
-  var trail = [];            // points the head has passed through, newest first
-  var walk = null;           // {k, queue:[[x,y]...]} while settling onto a perch
-  var restingOn = -1, lastScroll = 0, upward = 0;
-
-  function unit(x, y) { var l = Math.hypot(x, y) || 1; return [x / l, y / l]; }
-  function wrap(a) { while (a > Math.PI) a -= 2 * Math.PI; while (a < -Math.PI) a += 2 * Math.PI; return a; }
-
-  // Lay the dragon along a perch as if it had walked in from `from` end.
-  function poseOn(k, fromB) {
-    var pts = perches[k].pts.slice();
-    if (fromB) pts.reverse();
-    var n = pts.length, end = pts[n - 1], d = unit(end[0] - pts[n - 2][0], end[1] - pts[n - 2][1]);
-    var back = unit(pts[0][0] - pts[1][0], pts[0][1] - pts[1][1]);
-    trail = [];
-    for (var i = n - 2; i >= 0; i--) trail.push({ x: pts[i][0], y: pts[i][1] });
-    for (var j = 1; j <= 80; j++) trail.push({ x: pts[0][0] + back[0] * j * 6, y: pts[0][1] + back[1] * j * 6 });
-    headPos = { x: end[0], y: end[1] };
-    heading = Math.atan2(d[1], d[0]); headAng = heading;
-    flip = flipTarget = Math.cos(heading) >= 0 ? 1 : -1;
-    speed = 0; walk = null; restingOn = k;
+  // where the dragon's body sits when standing on perch k, facing `face`
+  function standPoint(k, face, t) {
+    var p = perches[k];
+    return [p.x + 72 * S * face, p.y - feetDrop(t) * S];   // feet are ~72 units behind the body's origin
   }
-
-  // Build the landing: approach in line with the perch, then walk along its top.
-  function startWalk(k) {
-    var pts = perches[k].pts;
-    var a = pts[0], b = pts[pts.length - 1];
-    var fromB = Math.hypot(headPos.x - b[0], headPos.y - b[1]) < Math.hypot(headPos.x - a[0], headPos.y - a[1]);
-    var seq = pts.slice(); if (fromB) seq.reverse();
-    var d = unit(seq[1][0] - seq[0][0], seq[1][1] - seq[0][1]), run = 70 * K;
-    var q = [], appr = Math.hypot(headPos.x - seq[0][0], headPos.y - seq[0][1]) > 40 * K;
-    if (appr) q.push([seq[0][0] - d[0] * run, seq[0][1] - d[1] * run]);
-    walk = { k: k, appr: appr, queue: q.concat(seq.filter(function (_, i) { return i % 2 === 0 || i === seq.length - 1; })) };
-  }
-
-  function steer(dt, vw, vh) {
-    var sy = scrollY;
-    upward = lerp(upward, sy < lastScroll - 0.5 ? 1 : sy > lastScroll + 0.5 ? 0 : upward, 0.1);
-    lastScroll = sy;
-    var k = perchFor(sy), target, flying = true;
-    if (k < 0 && upward > 0.5) {   // heading back up: make for the perch above and settle there
-      for (var pi = perches.length - 1; pi >= 0; pi--) if (perches[pi].arrive <= sy) { k = pi; break; }
-    }
-    if (k >= 0) {
-      if (restingOn === k && !walk) { speed = 0; return; }
-      if (!walk || walk.k !== k) { restingOn = -1; startWalk(k); }
-      var q = walk.queue;
-      while (q.length > 1 && Math.hypot(q[0][0] - headPos.x, q[0][1] - headPos.y) < 16 * K) { q.shift(); walk.appr = false; }
-      target = q[0];
-      flying = walk.appr;
-      if (q.length === 1 && Math.hypot(target[0] - headPos.x, target[1] - headPos.y) < 1.5) {
-        headPos.x = target[0]; headPos.y = target[1]; speed = 0;
-        restingOn = k; walk = null; thump(perches[k].el);
-        return;
+  // between perches: ease from one to the next, rising and drifting out to the side (spec: sway)
+  function flightPoint(y, t) {
+    for (var i = 0; i < perches.length - 1; i++) {
+      var a = perches[i], b = perches[i + 1];
+      if (y > a.leave && y < b.arrive) {
+        var u = ease((y - a.leave) / Math.max(1, b.arrive - a.leave));
+        var pa = standPoint(i, D.face, t), pb = standPoint(i + 1, D.face, t);
+        var vw = document.documentElement.clientWidth;
+        var side = i % 2 ? -1 : 1, arc = Math.sin(u * Math.PI);
+        var x = pa[0] + (pb[0] - pa[0]) * u + side * 0.3 * vw * arc * Math.min(1, Math.abs(pb[1] - pa[1]) / 300);
+        var yy = pa[1] + (pb[1] - pa[1]) * u - 70 * S * arc;
+        return [clamp(x, 120 * S, vw - 120 * S), yy];
       }
+    }
+    return standPoint(Math.max(0, perchFor(y)), D.face, t);
+  }
+
+  // ---------------------------------------------------------------- state
+  var D = { x: 0, y: 0, ready: false, heading: 0, speed: 0, wig: 0, face: 1, sx: 1, pitch: 0,
+            stand: 1, top: 0, resting: -1, landing: -1, upward: 0, lastScroll: 0, swoop: null };
+
+  function poseOn(k, t) {
+    var p = standPoint(k, D.face, t);
+    D.x = p[0]; D.y = p[1]; D.speed = 0; D.stand = 1; D.resting = k; D.landing = -1; D.ready = true;
+  }
+
+  function steer(dt, t, now) {
+    var sy = scrollY, vh = innerHeight;
+    D.upward += ((sy < D.lastScroll - 0.5 ? 1 : sy > D.lastScroll + 0.5 ? 0 : D.upward) - D.upward) * 0.1;
+    D.lastScroll = sy;
+
+    var target, k = -1, standing = false;
+    var swooping = D.swoop && now - D.swoop.t < 1700;
+    if (swooping) {
+      target = [D.swoop.x, D.swoop.y];
     } else {
-      walk = null; restingOn = -1;
-      target = at(sForScroll(sy));
-      var tt = performance.now() / 1000;   // hovering mid-air: drift in a slow figure-eight
-      target = [target[0] + Math.sin(tt * 0.9) * 14 * K, target[1] + Math.sin(tt * 1.8) * 7 * K];
-    }
-
-    // fling guard: if the page jumped far away, bring the dragon in from just off-screen
-    var dx = target[0] - headPos.x, dy = target[1] - headPos.y, dist = Math.hypot(dx, dy);
-    var offTop = headPos.y < sy - 350, offBot = headPos.y > sy + vh + 350;
-    if ((offTop || offBot) && dist > vh * 1.1 && target[1] > sy - 200 && target[1] < sy + vh + 200) {
-      var ny = offTop ? sy - 160 * K : sy + vh + 160 * K, nx = lerp(target[0], headPos.x, 0.25);
-      var dir = unit(target[0] - nx, target[1] - ny);
-      headPos = { x: nx, y: ny };
-      heading = Math.atan2(dir[1], dir[0]); headAng = heading;
-      trail = [];
-      for (var j = 1; j <= 90; j++) trail.push({ x: nx - dir[0] * j * 5 + Math.sin(j * 0.12) * 18 * K, y: ny - dir[1] * j * 5 });
-      speed = 380 * K;
-      dx = target[0] - nx; dy = target[1] - ny; dist = Math.hypot(dx, dy);
-    }
-
-    var walking = !flying && k >= 0;
-    var turnRate = walking ? 7 : 3.3;                       // rad/s
-    var vMax = (walking ? 320 : 760) * K, accel = 900 * K, decel = 1500 * K;
-    var want = Math.atan2(dy, dx);
-    if (flying && dist > 90 * K) {                           // serpentine: the head weaves as it flies
-      var wig = 0.62 * Math.min(1, (dist - 90 * K) / (200 * K));
-      want += wig * Math.sin(phase);
-    }
-    var err = wrap(want - heading);
-    heading = wrap(heading + Math.max(-turnRate * dt, Math.min(turnRate * dt, err)));
-    var vWant = Math.min(vMax, 40 * K + dist * (walking ? 5 : 2.6));
-    if (Math.abs(err) > 0.5) vWant = Math.min(vWant, turnRate * dist * 0.3 + 8 * K); // tighten, don't orbit
-    speed = vWant > speed ? Math.min(vWant, speed + accel * dt) : Math.max(vWant, speed - decel * dt);
-    var stepLen = speed * dt;
-    if (stepLen >= dist && Math.abs(err) < 0.4) { headPos.x = target[0]; headPos.y = target[1]; }
-    else { headPos.x += Math.cos(heading) * stepLen; headPos.y += Math.sin(heading) * stepLen; }
-    phase += stepLen / (230 * K) * Math.PI * 2;
-
-    var last = trail[0];
-    if (!last || Math.hypot(headPos.x - last.x, headPos.y - last.y) >= 1.5) trail.unshift({ x: headPos.x, y: headPos.y });
-    trimTrail();
-  }
-
-  function trimTrail() {
-    var acc = 0, max = 92 * 3.4 * K + 120;
-    for (var i = 1; i < trail.length; i++) {
-      acc += Math.hypot(trail[i].x - trail[i - 1].x, trail[i].y - trail[i - 1].y);
-      if (acc > max) { trail.length = i + 1; return; }
-    }
-  }
-
-  // Sample the body: N+1 points spaced ds apart, backwards along the trail from the head.
-  function sampleBody(N, ds) {
-    var P = [[headPos.x, headPos.y]], prev = [headPos.x, headPos.y], idx = 0, need = ds;
-    while (P.length <= N) {
-      var nxt = trail[idx];
-      if (!nxt) { // ran out of trail: continue straight
-        var a = P[P.length - 1], b = P[P.length - 2] || [a[0] + 1, a[1]];
-        var d = unit(a[0] - b[0], a[1] - b[1]);
-        P.push([a[0] + d[0] * ds, a[1] + d[1] * ds]); continue;
+      D.swoop = null;
+      k = perchFor(sy);
+      if (k < 0 && D.upward > 0.5) {   // on the way back up: make for the perch above and settle there
+        for (var i = perches.length - 1; i >= 0; i--) if (perches[i].arrive <= sy) { k = i; break; }
       }
-      var seg = Math.hypot(nxt.x - prev[0], nxt.y - prev[1]);
-      if (seg >= need) {
-        var t = need / seg;
-        prev = [lerp(prev[0], nxt.x, t), lerp(prev[1], nxt.y, t)];
-        P.push(prev.slice()); need = ds;
-      } else { need -= seg; prev = [nxt.x, nxt.y]; idx++; }
+      if (k >= 0) {
+        if (D.resting === k) { D.speed = 0; D.stand += (1 - D.stand) * 0.12; standPose(t, k); return; }
+        if (D.landing !== k) { D.landing = k; D.resting = -1; }
+        target = standPoint(k, D.face, t);
+        standing = true;
+      } else {
+        D.landing = -1; D.resting = -1;
+        target = flightPoint(sy, t);
+      }
     }
-    return P;
+
+    var dx = target[0] - D.x, dy = target[1] - D.y, dist = Math.hypot(dx, dy);
+    // fling guard: the page jumped far away, so come in from just off-screen
+    var offTop = D.y < sy - 350, offBot = D.y > sy + vh + 350;
+    if ((offTop || offBot) && dist > vh * 1.1 && target[1] > sy - 200 && target[1] < sy + vh + 200) {
+      D.y = offTop ? sy - 200 * S : sy + vh + 200 * S;
+      D.x = target[0] + (D.x - target[0]) * 0.25;
+      D.heading = Math.atan2(target[1] - D.y, target[0] - D.x); D.speed = 360 * K;
+      dx = target[0] - D.x; dy = target[1] - D.y; dist = Math.hypot(dx, dy);
+    }
+
+    var near = standing && dist < 130 * K;
+    var turnRate = near ? 5 : 3, vMax = (swooping ? 760 : 620) * K;
+    var want = Math.atan2(dy, dx);
+    if (!near && dist > 90 * K) want += 0.3 * Math.min(1, (dist - 90 * K) / (200 * K)) * Math.sin(D.wig);
+    var err = wrapA(want - D.heading);
+    D.heading = wrapA(D.heading + clamp(err, -turnRate * dt, turnRate * dt));
+    var vWant = Math.min(vMax, 30 * K + dist * 2.4);
+    if (Math.abs(err) > 0.5) vWant = Math.min(vWant, turnRate * dist * 0.3 + 8 * K);   // tighten, don't orbit
+    D.speed = vWant > D.speed ? Math.min(vWant, D.speed + 900 * K * dt) : Math.max(vWant, D.speed - 1500 * K * dt);
+    var step = D.speed * dt;
+    if (step >= dist && Math.abs(err) < 0.5) { D.x = target[0]; D.y = target[1]; }
+    else { D.x += Math.cos(D.heading) * step; D.y += Math.sin(D.heading) * step; }
+    D.wig += step / (260 * K) * TAU;
+
+    // side-view attitude: face the horizontal direction, pitch with the climb or dive
+    var vx = Math.cos(D.heading) * D.speed, vy = Math.sin(D.heading) * D.speed;
+    if (Math.abs(vx) > 25 * K && !near) D.face = vx > 0 ? 1 : -1;
+    var pitchT = 26 * clamp(vy / (320 * K), -1, 1) * Math.min(1, D.speed / (120 * K));
+    D.pitch += (pitchT - D.pitch) * 0.07;
+    D.top += ((swooping ? 1 : 0) - D.top) * 0.1;
+    // fold into the stand pose over the last stretch of a landing
+    var standT = standing ? clamp(1 - (dist - 4) / (60 * S + 20), 0, 1) : 0;
+    D.stand += (standT - D.stand) * 0.15;
+    if (standing && dist < 1.5) {
+      D.x = target[0]; D.y = target[1]; D.speed = 0; D.resting = k; D.landing = -1;
+      thump(perches[k].el);
+    }
+  }
+  function standPose(t, k) {   // keep the feet on the perch while it breathes
+    var p = standPoint(k, D.face, t); D.x = p[0]; D.y = p[1];
+    D.pitch += (0 - D.pitch) * 0.1; D.top += (0 - D.top) * 0.1;
   }
 
-  /* ---------- drawing ---------- */
-  var dpr = 1, W = 0, H = 0;
-  var off = document.createElement('canvas'), octx = off.getContext('2d');
-  function size() {
-    dpr = Math.min(2, window.devicePixelRatio || 1);
-    W = innerWidth; H = innerHeight;
-    cvs.width = off.width = Math.round(W * dpr); cvs.height = off.height = Math.round(H * dpr);
-  }
-
-  var flip = 1, flipTarget = 1, headAng = 0, lastT = null;
-
-  function strokeAlong(c, P, Nn, side, offFrac, widthFrac, color, alpha, from, wfn) {
-    c.strokeStyle = color; c.lineCap = 'round';
-    for (var i = from; i < P.length - 1; i++) {
-      var w = wfn(i), o = side * w * offFrac;
-      c.globalAlpha = alpha * Math.min(1, i / 9);   // fade in behind the head so the two blend
-      c.lineWidth = Math.max(0.5, w * widthFrac);
-      c.beginPath();
-      c.moveTo(P[i][0] + Nn[i][0] * o, P[i][1] + Nn[i][1] * o);
-      c.lineTo(P[i + 1][0] + Nn[i + 1][0] * o, P[i + 1][1] + Nn[i + 1][1] * o);
-      c.stroke();
-    }
-    c.globalAlpha = 1;
-  }
-
-  function frame(time) {
-    requestAnimationFrame(frame);
-    if (!perches.length || document.hidden) { lastT = null; return; }
-    var dt = lastT === null ? 1 / 60 : Math.min(0.05, (time - lastT) / 1000); lastT = time;
-    if (!headPos) { var k0 = reduce.matches ? 0 : Math.max(0, perchFor(scrollY)); poseOn(k0, false); }
-    if (!reduce.matches) steer(dt, document.documentElement.clientWidth, H);
-
-    var tsec = time / 1000, sy = scrollY;
-    var N = 92, ds = 3.4 * K, neck = 27 * K;
-    var P = sampleBody(N, ds);
-    var minY = Infinity, maxY = -Infinity, minX = Infinity, maxX = -Infinity;
-    for (var i = 0; i <= N; i++) {
-      minY = Math.min(minY, P[i][1]); maxY = Math.max(maxY, P[i][1]);
-      minX = Math.min(minX, P[i][0]); maxX = Math.max(maxX, P[i][0]);
-    }
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.clearRect(0, 0, cvs.width, cvs.height);
-    if (maxY - sy < -140 || minY - sy > H + 140) return;
-
-    // tangents (pointing towards the head) and normals; a gentle ripple keeps it alive at rest
-    var T = [], Nn = [];
-    for (i = 0; i <= N; i++) {
-      var a = P[Math.max(0, i - 1)], b = P[Math.min(N, i + 1)];
-      var tv = unit(a[0] - b[0], a[1] - b[1]);
-      T.push(tv); Nn.push([-tv[1], tv[0]]);
-    }
-    var amp = reduce.matches ? 0 : (1.1 + Math.min(1, speed / (500 * K)) * 1.5) * K;
-    for (i = 0; i <= N; i++) {
-      var w0 = amp * Math.min(1, i / 16) * Math.sin(i * 0.2 - tsec * 2.4);
-      P[i] = [P[i][0] + Nn[i][0] * w0, P[i][1] - sy + Nn[i][1] * w0];
-    }
-
-    // head direction: smoothed, and taken from the neck so head and body turn together
-    var hd = unit(P[0][0] - P[5][0], P[0][1] - P[5][1]);
-    headAng = headAng + wrap(Math.atan2(hd[1], hd[0]) - headAng) * (reduce.matches ? 1 : 0.35);
-    var cx = Math.cos(headAng);
-    if (Math.abs(cx) > 0.25) flipTarget = cx >= 0 ? 1 : -1;
-    flip = reduce.matches ? flipTarget : lerp(flip, flipTarget, Math.min(1, dt * 7));
-    var backSign = flip >= 0 ? 1 : -1, roll = Math.abs(flip);
-
-    var headH = neck * 1.14;
-    function width(i) {
-      var u = i / N;
-      var body = neck * (1 - Math.pow(u, 1.7)) * (0.92 + 0.22 * Math.sin(Math.PI * Math.min(1, u * 1.4)));
-      var m = Math.min(1, i / 7); m = m * m * (3 - 2 * m);
-      return lerp(headH, body, m);          // the neck swells to meet the head's cut exactly
-    }
-
-    var c = octx;
-    c.setTransform(dpr, 0, 0, dpr, 0, 0);
-    c.globalCompositeOperation = 'source-over';
-    c.clearRect(0, 0, W, H);
-    c.fillStyle = BLUE;
-
-    // 1. silhouette: mane spines, body, tail barb, head — one shape
-    for (i = 1; i < N * 0.84; i += 6) {
-      var u = i / N, base = width(i) / 2;
-      var j = Math.min(N, i + 5), k2 = Math.min(N, i + 11);
-      var len = K * (7 + 11 * Math.exp(-i / 12)) * (1 - 0.55 * u) * roll;
-      var nb = [-Nn[i][0] * backSign, -Nn[i][1] * backSign];
-      var bx0 = P[i][0] + nb[0] * base * .75, by0 = P[i][1] + nb[1] * base * .75;
-      var bx1 = P[j][0] + nb[0] * width(j) / 2 * .75, by1 = P[j][1] + nb[1] * width(j) / 2 * .75;
-      var tipx = P[k2][0] + nb[0] * (width(k2) / 2 + len), tipy = P[k2][1] + nb[1] * (width(k2) / 2 + len);
-      c.beginPath(); c.moveTo(bx0, by0);
-      c.quadraticCurveTo(lerp(bx0, tipx, .5) + nb[0] * len * .35, lerp(by0, tipy, .5) + nb[1] * len * .35, tipx, tipy);
-      c.lineTo(bx1, by1); c.closePath(); c.fill();
-    }
-    var L = [], R = [];
-    for (i = 0; i <= N; i++) {
-      var hw = width(i) / 2;
-      L.push([P[i][0] + Nn[i][0] * hw, P[i][1] + Nn[i][1] * hw]);
-      R.push([P[i][0] - Nn[i][0] * hw, P[i][1] - Nn[i][1] * hw]);
-    }
-    c.beginPath(); c.moveTo(L[0][0], L[0][1]);
-    for (i = 1; i <= N; i++) c.lineTo(L[i][0], L[i][1]);
-    for (i = N; i >= 0; i--) c.lineTo(R[i][0], R[i][1]);
-    c.closePath(); c.fill();
-    var tp = P[N], tt = T[N], tn = Nn[N], bl = 13 * K, bw = 7 * K;
-    c.beginPath();
-    c.moveTo(P[N - 4][0] + tn[0] * bw, P[N - 4][1] + tn[1] * bw);
-    c.lineTo(tp[0] - tt[0] * bl, tp[1] - tt[1] * bl);
-    c.lineTo(P[N - 4][0] - tn[0] * bw * .5, P[N - 4][1] - tn[1] * bw * .5);
-    c.lineTo(P[N - 9][0], P[N - 9][1]);
-    c.closePath(); c.fill();
-
-    var sc = 0, hw0 = 0, hh0 = 0;
-    function headFrame() {
-      c.translate(P[0][0], P[0][1]);
-      c.rotate(headAng);
-      c.scale(1, flip === 0 ? 0.001 : flip);
-      c.rotate(-HEAD_TILT);
-      c.translate(-5 * K, -HEAD_ATTACH_Y * hh0 * sc);
-    }
-    if (head) {
-      hw0 = head.width; hh0 = head.height; sc = headH / (hh0 * 0.47);
-      c.save(); headFrame();
-      c.fillRect(0, hh0 * sc * 0.2, hw0 * sc * 0.24, hh0 * sc * 0.47);   // solid neck behind the cut
-      c.drawImage(head, 0, 0, hw0 * sc, hh0 * sc); c.restore();
-    }
-
-    // 2. shading, painted only where the silhouette is — so it wraps head and body alike
-    c.globalCompositeOperation = 'source-atop';
-    var belly = backSign;   // +Nn side is the belly when the crown is up
-    strokeAlong(c, P, Nn, belly, 0.26, 0.34, BLUE_LIT, 0.55, 3, width);               // pale underbelly
-    c.strokeStyle = BLUE_DEEP; c.lineWidth = 1; c.globalAlpha = 0.45;                 // belly plates
-    for (i = 8; i < N - 4; i += 3) {
-      var ww = width(i);
-      c.beginPath();
-      c.moveTo(P[i][0] + Nn[i][0] * belly * ww * .1, P[i][1] + Nn[i][1] * belly * ww * .1);
-      c.lineTo(P[i][0] + Nn[i][0] * belly * ww * .46, P[i][1] + Nn[i][1] * belly * ww * .46);
-      c.stroke();
-    }
-    c.globalAlpha = 1;
-    strokeAlong(c, P, Nn, belly, 0.47, 0.14, BLUE_DEEP, 0.8, 0, width);               // belly-side core shadow
-    strokeAlong(c, P, Nn, -belly, 0.47, 0.1, BLUE_DEEP, 0.55, 0, width);              // rim along the back
-    strokeAlong(c, P, Nn, -belly, 0.2, 0.2, BLUE_LIT, 0.5, 0, width);                 // light along the spine
-    strokeAlong(c, P, Nn, -belly, 0.24, 0.05, CANVAS, 0.35, 2, width);                // glint
-    c.strokeStyle = BLUE_DEEP; c.globalAlpha = 0.35; c.lineWidth = 0.9;               // back scales
-    for (i = 6; i < N - 6; i += 3) {
-      var sw = width(i), o1 = -belly * sw * 0.02, o2 = -belly * sw * 0.36;
-      var ax = P[i][0] + Nn[i][0] * o1, ay = P[i][1] + Nn[i][1] * o1;
-      var bx = P[i][0] + Nn[i][0] * o2, by = P[i][1] + Nn[i][1] * o2;
-      var mx = (ax + bx) / 2 - T[i][0] * 3 * K, my = (ay + by) / 2 - T[i][1] * 3 * K;
-      c.beginPath(); c.moveTo(ax, ay); c.quadraticCurveTo(mx, my, bx, by); c.stroke();
-    }
-    c.globalAlpha = 1;
-    if (head) { // the same light falls on the head: lit crown, shaded jaw
-      c.save(); headFrame();
-      var g = c.createLinearGradient(0, 0, 0, hh0 * sc);
-      g.addColorStop(0, BLUE_LIT); g.addColorStop(0.42, 'rgba(0,0,0,0)'); g.addColorStop(1, BLUE_DEEP);
-      c.globalAlpha = 0.75; c.fillStyle = g; c.fillRect(0, 0, hw0 * sc, hh0 * sc);
-      c.globalAlpha = 1; c.restore();
-    }
-
-    // 3. the eye, then the whole dragon onto the page with a soft shadow beneath it
-    c.globalCompositeOperation = 'source-over';
-    if (head) {
-      c.save(); headFrame(); c.fillStyle = GOLD;
-      c.beginPath(); c.ellipse(EYE[0] * hw0 * sc, EYE[1] * hh0 * sc, 4 * K, 2.3 * K, 0.35, 0, Math.PI * 2); c.fill();
-      c.restore();
-    }
-    var pad = 60 * K;
-    var x0 = Math.max(0, Math.floor((minX - pad) * dpr)), y0 = Math.max(0, Math.floor((minY - sy - pad) * dpr));
-    var x1 = Math.min(cvs.width, Math.ceil((maxX + pad) * dpr)), y1 = Math.min(cvs.height, Math.ceil((maxY - sy + pad) * dpr));
-    if (x1 <= x0 || y1 <= y0) return;
-    var lift = restingOn >= 0 ? 0.5 : 1;   // shadow sits tighter when perched
-    ctx.shadowColor = 'rgba(31,67,100,' + (0.28 - 0.08 * lift) + ')';
-    ctx.shadowBlur = (6 + 10 * lift) * dpr; ctx.shadowOffsetX = 2 * dpr * lift; ctx.shadowOffsetY = (4 + 10 * lift) * dpr;
-    ctx.drawImage(off, x0, y0, x1 - x0, y1 - y0, x0, y0, x1 - x0, y1 - y0);
-    ctx.shadowColor = 'transparent';
-  }
-
-  // a little bump in whatever the dragon lands on
   function thump(el) {
     if (!el || reduce.matches) return;
     el = el.closest('.lb-book') || el;
     el.classList.remove('is-landed'); void el.offsetWidth; el.classList.add('is-landed');
   }
 
+  // ---------------------------------------------------------------- render
+  var t0 = performance.now(), lastNow = null;
+  function frame(now) {
+    requestAnimationFrame(frame);
+    if (!perches.length || document.hidden) { lastNow = null; return; }
+    var dt = lastNow === null ? 1 / 60 : Math.min(0.05, (now - lastNow) / 1000); lastNow = now;
+    var still = reduce.matches;
+    var t = still ? 0 : (now - t0) / 1000;
+    if (!D.ready) poseOn(still ? 0 : Math.max(0, perchFor(scrollY)), t);
+    if (still) { D.resting = -1; poseOn(0, 0); } else steer(dt, t, now);
+    D.sx += (D.face - D.sx) * (still ? 1 : 0.1);
+
+    var sy = scrollY, vx0 = D.x, vy0 = D.y - sy;
+    if (vy0 < -400 || vy0 > innerHeight + 400) { if (wrap.innerHTML) wrap.innerHTML = ''; return; }
+    var c = (t / FLAP) % 1;
+    var st = clamp((D.stand - 0.4) / 0.2, 0, 1); st = st * st * (3 - 2 * st);   // quick handover, no ghosting
+    var flyA = (1 - st) * (1 - D.top), standA = st * (1 - D.top);
+    var sw = VB_SIDE[2] * S, shh = VB_SIDE[3] * S, ox = -VB_SIDE[0] * S, oy = -VB_SIDE[1] * S;
+    var sxs = Math.abs(D.sx) < 0.02 ? 0.02 * Math.sign(D.sx || 1) : D.sx;
+    var h = '';
+    var box = 'position:absolute;left:' + f(vx0 - ox) + 'px;top:' + f(vy0 - oy) + 'px;width:' + f(sw) + 'px;height:' + f(shh) +
+              'px;transform-origin:' + f(ox) + 'px ' + f(oy) + 'px;';
+    if (flyA > 0.01) h += '<div style="' + box + 'opacity:' + f(flyA) + ';transform:rotate(' + f(D.pitch * Math.sign(sxs)) + 'deg) scaleX(' + sxs.toFixed(3) + ')">' +
+      renderDragonSVG({ view: 'side', mode: 'fly', c: c, t: t, id: 'lbd-f' }, vbs) + '</div>';
+    if (standA > 0.01) h += '<div style="' + box + 'opacity:' + f(standA) + ';transform:scaleX(' + sxs.toFixed(3) + ')">' +
+      renderDragonSVG({ view: 'side', mode: 'stand', c: 0, t: t, id: 'lbd-s' }, vbs) + '</div>';
+    if (D.top > 0.01) {
+      var tw = VB_TOP[2] * S, to = -VB_TOP[0] * S;
+      h += '<div style="position:absolute;left:' + f(vx0 - to) + 'px;top:' + f(vy0 - to) + 'px;width:' + f(tw) + 'px;height:' + f(tw) +
+        'px;opacity:' + f(D.top) + ';transform:rotate(' + f(D.heading / RAD + 90) + 'deg)">' +
+        renderDragonSVG({ view: 'top', mode: 'fly', c: c, t: t, roll: 0, id: 'lbd-t' }, vbt) + '</div>';
+    }
+    wrap.innerHTML = h;
+  }
+
+  // click swoop: a quick top-view pass over whatever was clicked
+  document.addEventListener('click', function (e) {
+    if (reduce.matches || !e.target.closest) return;
+    if (!e.target.closest('a, button, [role=button], [data-dragon-swoop]')) return;
+    D.swoop = { t: performance.now(), x: e.clientX + scrollX, y: e.clientY + scrollY - 30 * S };
+    D.resting = -1; D.landing = -1;
+  }, true);
+
   var pending = false;
   function relayout() {
     if (pending) return; pending = true;
     requestAnimationFrame(function () {
-      pending = false; size(); build();
-      if (headPos && perches.length) {
-        var k = reduce.matches ? 0 : perchFor(scrollY);
-        if (k >= 0) poseOn(k, false);
-      }
+      pending = false; build();
+      if (D.ready && D.resting >= 0 && perches[D.resting]) poseOn(D.resting, (performance.now() - t0) / 1000);
     });
   }
-  size(); build();
+  build();
   window.addEventListener('resize', relayout);
   window.addEventListener('load', relayout);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(relayout);
   if ('ResizeObserver' in window) new ResizeObserver(relayout).observe(document.body);
   requestAnimationFrame(frame);
 })();
-
 </script>
 </body>
 </html>

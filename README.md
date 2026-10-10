@@ -114,15 +114,20 @@ comes from one class on the `<a class="lb-book …">`: `lb-book--blue`, `lb-book
 for ink. The gilt is the one place gold is used for lettering, because that is what a stamped
 cover is.
 
-**The LB dragon** is the dragon from the monogram, in the kit's blue, drawn on a canvas
-over the home page. Its head is cut from the mark and drawn as one shaded shape with the body
-(pale underbelly, belly plates, back scales, a soft shadow on the page), so the two move as
-one. It starts curled over the arched window. As you scroll down it flies head-first down the
-page, weaving through the margins, and lands on each book, the *Fall Before Flight* cover and
-finally the signup card. Scroll back up and it turns round and flies up to the perch above,
-taking its own path rather than rewinding. Its speed and turning are capped, so a fast scroll
-makes it glide to catch up instead of jumping; if the page leaps a long way, it flies in from
-just off-screen. Landing spots are worked out from where those things actually are, so it
-follows the layout on any screen size — look for `seq.push(` in the dragon script at the
-bottom of `index.html` to change them. It never blocks clicks, screen readers ignore it, and
-anyone with "reduce motion" turned on sees it resting on the arch and nothing more.
+**The LB dragon** is the winged dragon from the Claude Design handoff (*Dragon Reference
+Sheet v2* and `DRAGON_ANIMATION_SPEC.md`). Its skeleton, colours and wingbeat are the
+reference's own code, inlined at the bottom of `index.html` so the page still opens straight
+from a folder. Its home is on top of the arched window in the hero, where it stands and
+breathes. As you scroll down it takes off, seen from the side, nose-down, flying from side to
+side through the margins and landing on each book, the *Fall Before Flight* cover and the
+signup card. Scroll back up and it turns round and climbs, nose-up, to the perch above on
+its own path instead of rewinding. Its speed and turning are capped, so a fast scroll makes
+it glide to catch up; if the page leaps a long way, it flies in from just off-screen.
+Clicking a link or button sends it on a quick swoop over that spot in the top view, as the
+spec describes. Landing spots come from where those things actually are, so it follows the
+layout on any screen size. It never blocks clicks, screen readers ignore it, and anyone with
+"reduce motion" turned on sees it standing still on the arch.
+
+**Page heads.** The title band at the top of About, Books and Letters from Liza is the cloth
+colour of the book card that leads there: blue, red and ink. Each one is a single class on the
+`lb-pagehead` div (`lb-pagehead--blue`, `--red` or `--ink`).

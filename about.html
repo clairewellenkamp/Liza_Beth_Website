@@ -484,6 +484,18 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
 .lb-footer__fine{margin-top:var(--space-7);padding-top:var(--space-5);border-top:var(--border-hair);font-size:var(--size-caption);color:var(--text-faint)}
 .lb-footer__fine p{max-width:none;margin:0}
 
+
+/* ---- Page head in its book's cloth colour (matches the home-page card) ---- */
+.lb-pagehead--book{background-color:var(--cover);border-bottom:3px solid var(--gold);color:var(--canvas);
+  background-image:radial-gradient(120% 140% at 50% 0%,rgba(255,255,255,.08),transparent 60%),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0 1px,transparent 1px 3px),
+    repeating-linear-gradient(90deg,rgba(0,0,0,.06) 0 1px,transparent 1px 3px)}
+.lb-pagehead--book h1{color:var(--canvas)}
+.lb-pagehead--book .eyebrow{color:var(--canvas);opacity:.82}
+.lb-pagehead--blue{--cover:var(--blue)}
+.lb-pagehead--red{--cover:var(--danger)}
+.lb-pagehead--ink{--cover:var(--ink)}
+
 /* ---- Small screens --------------------------------------------------- */
 @media (max-width:640px){
   .lb-section{padding:var(--space-8) var(--space-5)}
@@ -532,7 +544,7 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
 <main id="main">
 <div class="lb-page" id="page-about">
 
-<div class="lb-pagehead">
+<div class="lb-pagehead lb-pagehead--book lb-pagehead--blue">
   <div class="lb-wrap"><span class="eyebrow">About</span><h1>Liza Beth</h1></div>
 </div>
 
