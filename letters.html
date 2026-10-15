@@ -496,6 +496,44 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
 .lb-pagehead--red{--cover:var(--danger)}
 .lb-pagehead--ink{--cover:var(--ink)}
 
+
+/* ---- Letters: index of cards, and one letter at a time ------------------ */
+.lb-letters{max-width:960px;margin:0 auto}
+.lb-letters__intro{max-width:56ch;margin:0 auto var(--space-8);text-align:center;color:var(--text-soft)}
+.lb-letters__group+.lb-letters__group{margin-top:var(--space-9)}
+.lb-letters__head{display:flex;align-items:baseline;gap:var(--space-4);flex-wrap:wrap;padding-bottom:var(--space-3);margin-bottom:var(--space-6);border-bottom:var(--border-hair)}
+.lb-letters__head h2{margin:0;font-size:var(--size-h3)}
+.lb-letters__count{margin-left:auto;font-size:var(--size-caption);color:var(--text-faint)}
+.lb-letters__list{display:flex;flex-direction:column;gap:var(--space-6)}
+.lb-letter-card{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);background:var(--canvas);border:var(--border-hair);border-radius:var(--radius-card);box-shadow:var(--shadow-2);overflow:hidden;text-decoration:none;color:inherit;
+  transition:box-shadow var(--dur) var(--ease),transform var(--dur) var(--ease),border-color var(--dur) var(--ease)}
+.lb-letter-card:hover{box-shadow:var(--shadow-3);transform:translateY(-2px);border-color:var(--gilt)}
+.lb-letter-card:focus-visible{outline:2px solid var(--focus-ring);outline-offset:3px}
+.lb-letter-cover{position:relative;aspect-ratio:4/3;background:var(--blue-deep);overflow:hidden}
+.lb-letter-card .lb-letter-cover{aspect-ratio:auto;min-height:100%}
+.lb-letter-cover__art,.lb-letter-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 60%;display:block;transition:transform var(--dur-page) var(--ease)}
+.lb-letter-card:hover .lb-letter-cover__art,.lb-letter-card:hover .lb-letter-cover img{transform:scale(1.03)}
+.lb-letter-card__body{padding:var(--space-6) var(--space-6) var(--space-6);display:flex;flex-direction:column;gap:var(--space-3);justify-content:center}
+.lb-letter-card__meta{display:flex;gap:var(--space-3);align-items:baseline;flex-wrap:wrap}
+.lb-letter-card__time{font-size:var(--size-caption);color:var(--text-faint)}
+.lb-letter-card__title{font-family:var(--font-display);font-weight:var(--weight-display);font-size:var(--size-h2);line-height:var(--leading-h2);margin:0;color:var(--text)}
+.lb-letter-card__excerpt{margin:0;color:var(--text-soft);max-width:none;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.lb-letter-card__more{font-family:var(--font-body);font-weight:var(--weight-bold);font-size:var(--size-ui);letter-spacing:var(--tracking-ui);color:var(--link);margin-top:var(--space-2)}
+.lb-letter-card:hover .lb-letter-card__more{color:var(--link-hover);text-decoration:underline;text-underline-offset:3px}
+@media (max-width:700px){
+  .lb-letter-card{grid-template-columns:1fr}
+  .lb-letter-card .lb-letter-cover{aspect-ratio:16/9;min-height:0}
+  .lb-letter-card__body{padding:var(--space-5)}
+}
+/* the letter itself */
+.lb-letter{max-width:var(--container-prose);margin:0 auto}
+.lb-letter__back{display:inline-flex;gap:var(--space-2);align-items:center;font-family:var(--font-body);font-weight:var(--weight-bold);font-size:var(--size-ui);letter-spacing:var(--tracking-ui);color:var(--link);text-decoration:none;margin-bottom:var(--space-6)}
+.lb-letter__back:hover{color:var(--link-hover);text-decoration:underline;text-underline-offset:3px}
+.lb-letter .lb-letter-cover{border-radius:var(--radius-card);box-shadow:var(--shadow-2);aspect-ratio:16/9;margin-bottom:var(--space-7)}
+.lb-letter__title{font-size:var(--size-h1);line-height:var(--leading-h1);margin:var(--space-3) 0 var(--space-3)}
+.lb-letter__time{font-size:var(--size-caption);color:var(--text-faint);margin:0 0 var(--space-7)}
+.lb-letter__end{display:flex;justify-content:space-between;align-items:center;gap:var(--space-4);flex-wrap:wrap;margin-top:var(--space-8);padding-top:var(--space-5);border-top:var(--border-hair)}
+
 /* ---- Small screens --------------------------------------------------- */
 @media (max-width:640px){
   .lb-section{padding:var(--space-8) var(--space-5)}
@@ -548,19 +586,42 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
   <div class="lb-wrap"><span class="eyebrow">The blog</span><h1>Letters from Liza</h1></div>
 </div>
 
-<section class="lb-section">
-  <div style="max-width:820px;margin:0 auto">
-    <div style="display:flex;align-items:baseline;gap:var(--space-4);flex-wrap:wrap;margin-bottom:var(--space-6)">
-      <h2 style="margin:0;font-size:var(--size-h3)">Short stories</h2>
-      <span class="lb-field__hint" style="margin-left:auto">One letter so far</span>
-    </div>
+<section class="lb-section" id="letters-index">
+  <div class="lb-letters">
+    <p class="tagline lb-letters__intro">Short stories and notes from Liza, sent out as they are written. Pick one to read.</p>
 
-    <article class="lb-card" style="background:var(--canvas)">
-      <div class="lb-card__body" style="padding:var(--space-7)">
-        <span class="lb-card__eyebrow">Short stories</span>
-        <h3 style="font-size:var(--size-h2);line-height:var(--leading-h2);margin:0 0 var(--space-5)">Moon Gold and Silver Horses</h3>
-        <div class="lb-prose lb-prose--story">
-          <p>The moon peaked through the clouds in broken whispers. The only noise was the hsssh hssh of the dry field bending under the path of the soft wind. It always started that way. Yet, each time, the moonlight bouncing off the grass, the almost dry sparkle of the air, these moments just before the arrival of the beasts, they made Kiedreth’s mouth dry and the spaces between his bones shiver. He spat out the piece of the dried grass between his teeth onto the cracked ground. It landed next to the little girl. Her grip on his trousers shifted but she didn’t flinch. The child wasn’t much taller than his knee. Kiedreth deepened his grimace. His mouth felt even dryer without the grass to chew, but he didn’t want to break what was left of his teeth.</p>
+    <!-- One group per kind of letter. To add a letter: copy a card into the right list
+         (or a new group), and copy an <article class="lb-letter"> below with a matching id. -->
+    <div class="lb-letters__group">
+      <div class="lb-letters__head"><h2>Short stories</h2><span class="lb-letters__count">One letter so far</span></div>
+      <div class="lb-letters__list">
+      <a class="lb-letter-card" href="#moon-gold-and-silver-horses" data-letter="moon-gold-and-silver-horses">
+        <span class="lb-letter-cover">
+          <img src="moon-gold-and-silver-horses.jpg" width="1200" height="800" alt="A man in a hat and a small blond girl crouch in tall grass at night, watching two glowing white horses graze beneath a full moon and desert buttes">
+        </span>
+        <span class="lb-letter-card__body">
+          <span class="lb-letter-card__meta"><span class="lb-card__eyebrow">Short story</span><span class="lb-letter-card__time">5 min read</span></span>
+          <span class="lb-letter-card__title">Moon Gold and Silver Horses</span>
+          <span class="lb-letter-card__excerpt">The moon peaked through the clouds in broken whispers. The only noise was the hsssh hssh of the dry field bending under the path of the soft wind. It always started that way.</span>
+          <span class="lb-letter-card__more">Read the letter &rarr;</span>
+        </span>
+      </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="lb-section" id="letters-read">
+  <article class="lb-letter" id="moon-gold-and-silver-horses" aria-labelledby="moon-gold-and-silver-horses-title">
+    <a class="lb-letter__back" href="letters.html">&larr; All letters</a>
+    <div class="lb-letter-cover">
+      <img src="moon-gold-and-silver-horses.jpg" width="1200" height="800" alt="A man in a hat and a small blond girl crouch in tall grass at night, watching two glowing white horses graze beneath a full moon and desert buttes" loading="lazy">
+    </div>
+    <span class="lb-card__eyebrow">Short story</span>
+    <h2 class="lb-letter__title" id="moon-gold-and-silver-horses-title">Moon Gold and Silver Horses</h2>
+    <p class="lb-letter__time">5 min read</p>
+    <div class="lb-prose lb-prose--story">
+            <p>The moon peaked through the clouds in broken whispers. The only noise was the hsssh hssh of the dry field bending under the path of the soft wind. It always started that way. Yet, each time, the moonlight bouncing off the grass, the almost dry sparkle of the air, these moments just before the arrival of the beasts, they made Kiedreth’s mouth dry and the spaces between his bones shiver. He spat out the piece of the dried grass between his teeth onto the cracked ground. It landed next to the little girl. Her grip on his trousers shifted but she didn’t flinch. The child wasn’t much taller than his knee. Kiedreth deepened his grimace. His mouth felt even dryer without the grass to chew, but he didn’t want to break what was left of his teeth.</p>
 <p>“Whensit goingta get to gettin?” whispered the scratchy voice below and ahead of him. “My knees are startin ta talk up somethin fierce.”</p>
 <p>“Shet yer mouth,” was the only response he got from the others.</p>
 <p>“You better hope you got this right,” a half hearted threat at Keidreth, as if they hadn’t harvested twice already under his guidance.</p>
@@ -589,10 +650,12 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
 <p>The horse took a step closer, then brought down its magnificent head to place its nose before the face of the little blond girl. A small hand reached out to meet it. Then the moonlight left, and only Kiedreth and the girl remained.</p>
 <p>Another shout. Kiedreth brought himself from the trance and looked, adding his own quiet curse to the chorus that was rising in the field beyond. Protectors. Lots of them. Horses thundering beneath the shadow of the cloud, dust and blue light piercing the darkness surrounding them.</p>
 <p>Both arms grabbed his niece and lifted her off the ground as he ran, soft but swift, away from the field. His mat filled with brown dead grass remained upon the ground where they’d stood.</p>
-        </div>
-      </div>
-    </article>
-  </div>
+    </div>
+    <div class="lb-letter__end">
+      <a class="lb-letter__back" style="margin:0" href="letters.html">&larr; All letters</a>
+      <a class="lb-btn lb-btn--secondary lb-btn--sm" href="#signup">Get the next letter</a>
+    </div>
+  </article>
 </section>
 
 <section class="lb-section--tight" style="padding:var(--space-8) var(--space-6)" id="signup">
@@ -693,6 +756,21 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
   openTarget();
 })();
 
+
+// Letters: show the index of cards, or one letter when the address ends in #its-id.
+(function () {
+  var index = document.getElementById('letters-index'), read = document.getElementById('letters-read');
+  if (!index || !read) return;
+  var letters = read.querySelectorAll('.lb-letter');
+  function show() {
+    var id = (location.hash || '').slice(1), hit = null;
+    letters.forEach(function (a) { var on = a.id === id; a.hidden = !on; if (on) hit = a; });
+    index.hidden = !!hit; read.hidden = !hit;
+    if (hit) { setTimeout(function () { window.scrollTo(0, 0); }, 60); var h = hit.querySelector('h2'); if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); } }
+  }
+  window.addEventListener('hashchange', show);
+  show();
+})();
 </script>
 </body>
 </html>
