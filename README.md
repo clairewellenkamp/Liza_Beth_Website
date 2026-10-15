@@ -72,12 +72,25 @@ last one, and change the name and the three numbers.
 
 ### 2. Add a letter
 
-In `letters.html`, each letter is one `<article class="lb-card">`. Copy the existing one,
-paste it below, and replace the title in the `<h3>` and the paragraphs inside
-`<div class="lb-prose lb-prose--story">`. Each paragraph needs its own `<p>…</p>`.
+*Letters from Liza* opens on a page of cards, grouped by kind ("Short stories"). Clicking a
+card opens that letter on its own, at `letters.html#its-id`, with a link back to all letters.
+Each letter is two pieces in `letters.html`, and they have to share an id:
 
-The `lb-card__eyebrow` is the category label ("Short stories"). The count above the list —
-"One letter so far" — is plain text, so update it by hand.
+1. **The card**: an `<a class="lb-letter-card" href="#the-id">` inside the right
+   `lb-letters__list`. Copy the existing one, then change the `href`, the title, the
+   "5 min read" (about 220 words a minute), the short excerpt and the cover.
+2. **The letter**: an `<article class="lb-letter" id="the-id">` inside
+   `<section id="letters-read">`. Copy the existing one, then change the id, title, read
+   time and cover, and put the story in `<div class="lb-prose lb-prose--story">`, one
+   `<p>…</p>` per paragraph.
+
+**Covers.** Each card and letter has a `<span class="lb-letter-cover">` / `<div class="lb-letter-cover">`.
+To use a picture, put the image file next to the page and replace what is inside the cover
+with `<img src="your-image.jpg" alt="what the picture shows">`. It is cropped to fit
+automatically.
+
+For a new kind of letter, copy a whole `<div class="lb-letters__group">` and rename its
+heading. The "One letter so far" count is plain text, so update it by hand.
 
 ## Publishing it
 
