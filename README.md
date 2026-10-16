@@ -8,7 +8,7 @@ Open `index.html` in a browser and it works — including straight off a USB sti
 | `index.html` | Hero with the gilt lockup and arched window, three cloth-bound book nav cards, featured novel, signup — and the LB dragon |
 | `about.html` | *About Liza*, the LB mark, and the riddle card with its "turn off the lights" switch |
 | `books.html` | *The Fall Before Flight* — cover art, back-of-book summary, **Liza's progress** bars, Chapter One |
-| `letters.html` | *Letters from Liza* — "Moon Gold and Silver Horses" under **Short stories**, signup |
+| `letters.html` | *Letters from Liza* — "A Letter to a Writer in Waiting" under **Poems**, "Moon Gold and Silver Horses" under **Short stories**, signup |
 
 Supporting files: `favicon.ico`, `favicon-32.png`, `apple-touch-icon.png`, `icon-512.png`, and
 `fall-before-flight-cover.jpg` (the rough-draft cover, used on the home and Books pages).
@@ -88,6 +88,13 @@ Each letter is two pieces in `letters.html`, and they have to share an id:
 To use a picture, put the image file next to the page and replace what is inside the cover
 with `<img src="your-image.jpg" alt="what the picture shows">`. It is cropped to fit
 automatically.
+
+**Poems** are set on a sheet of letter paper instead of in `lb-prose`: inside the article,
+`<div class="lb-poem-sheet"><div class="lb-poem-sheet__frame"><div class="lb-poem">`, with the
+title as `<h2 class="lb-poem__title">`, one `<p class="lb-poem__stanza">` per stanza and one
+`<span class="lb-poem__line">` per line, so the line breaks stay exactly as written. Copy
+"A Letter to a Writer in Waiting" as the starting point. If a cover photo crops badly, add
+`style="object-position:50% 90%"` to its `<img>` (the second number moves the crop up or down).
 
 For a new kind of letter, copy a whole `<div class="lb-letters__group">` and rename its
 heading. The "One letter so far" count is plain text, so update it by hand.

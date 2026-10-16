@@ -534,6 +534,17 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
 .lb-letter__time{font-size:var(--size-caption);color:var(--text-faint);margin:0 0 var(--space-7)}
 .lb-letter__end{display:flex;justify-content:space-between;align-items:center;gap:var(--space-4);flex-wrap:wrap;margin-top:var(--space-8);padding-top:var(--space-5);border-top:var(--border-hair)}
 
+/* a poem, set on a sheet of letter paper */
+.lb-poem-sheet{position:relative;background:var(--canvas);border:1px solid var(--line-strong);border-radius:3px;padding:var(--space-3);
+  box-shadow:4px 5px 0 -1px var(--surface),5px 6px 0 -1px var(--line-strong),var(--shadow-3)}
+.lb-poem-sheet__frame{border:1px solid var(--line);padding:var(--space-8) var(--space-7)}
+.lb-poem{font-family:var(--font-subtitle);font-style:italic;font-size:1.2rem;line-height:1.6;color:var(--text)}
+.lb-poem__title{font-family:var(--font-subtitle);font-style:italic;font-weight:500;font-size:var(--size-h2);line-height:1.25;margin:0 0 var(--space-6)}
+.lb-poem__stanza{margin:0 0 1.6em}
+.lb-poem__line{display:block;padding-left:1.4em;text-indent:-1.4em}
+.lb-poem__note{margin:var(--space-7) 0 0;font-size:.95rem;line-height:1.55;color:var(--text-soft);max-width:none}
+@media (max-width:640px){.lb-poem-sheet{padding:var(--space-2)}.lb-poem-sheet__frame{padding:var(--space-6) var(--space-4)}.lb-poem{font-size:1.1rem}}
+
 /* ---- Small screens --------------------------------------------------- */
 @media (max-width:640px){
   .lb-section{padding:var(--space-8) var(--space-5)}
@@ -593,6 +604,23 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
     <!-- One group per kind of letter. To add a letter: copy a card into the right list
          (or a new group), and copy an <article class="lb-letter"> below with a matching id. -->
     <div class="lb-letters__group">
+      <div class="lb-letters__head"><h2>Poems</h2><span class="lb-letters__count">One letter so far</span></div>
+      <div class="lb-letters__list">
+      <a class="lb-letter-card" href="#a-letter-to-a-writer-in-waiting" data-letter="a-letter-to-a-writer-in-waiting">
+        <span class="lb-letter-cover">
+          <img src="a-letter-to-a-writer-in-waiting.jpg" style="object-position:50% 90%" width="1600" height="1600" alt="An open book rests on a polished wooden window seat beside a paneled shutter, below a tall many-paned window looking out on green and copper-leaved trees">
+        </span>
+        <span class="lb-letter-card__body">
+          <span class="lb-letter-card__meta"><span class="lb-card__eyebrow">Poem</span><span class="lb-letter-card__time">4 min read</span></span>
+          <span class="lb-letter-card__title">A Letter to a Writer in Waiting:</span>
+          <span class="lb-letter-card__excerpt">Well, hello there! Or maybe a hullo! would be a little more welcoming at the moment. I see you have a couple stories bouncing around that old noggin’ of yours.</span>
+          <span class="lb-letter-card__more">Read the letter &rarr;</span>
+        </span>
+      </a>
+      </div>
+    </div>
+
+    <div class="lb-letters__group">
       <div class="lb-letters__head"><h2>Short stories</h2><span class="lb-letters__count">One letter so far</span></div>
       <div class="lb-letters__list">
       <a class="lb-letter-card" href="#moon-gold-and-silver-horses" data-letter="moon-gold-and-silver-horses">
@@ -612,6 +640,30 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
 </section>
 
 <section class="lb-section" id="letters-read">
+  <article class="lb-letter" id="a-letter-to-a-writer-in-waiting" aria-labelledby="a-letter-to-a-writer-in-waiting-title">
+    <a class="lb-letter__back" href="letters.html">&larr; All letters</a>
+    <div class="lb-letter-cover">
+      <img src="a-letter-to-a-writer-in-waiting.jpg" style="object-position:50% 90%" width="1600" height="1600" alt="An open book rests on a polished wooden window seat beside a paneled shutter, below a tall many-paned window looking out on green and copper-leaved trees" loading="lazy">
+    </div>
+    <span class="lb-card__eyebrow">Poem</span>
+    <p class="lb-letter__time">4 min read</p>
+    <div class="lb-poem-sheet"><div class="lb-poem-sheet__frame">
+      <div class="lb-poem">
+        <h2 class="lb-poem__title" id="a-letter-to-a-writer-in-waiting-title">A Letter to a Writer in Waiting:</h2>
+        <p class="lb-poem__stanza"><span class="lb-poem__line">Well, hello there!</span><span class="lb-poem__line">Or maybe a hullo! would be a little more welcoming at the moment.</span><span class="lb-poem__line">I see you have a couple stories bouncing around that old noggin’ of yours.</span><span class="lb-poem__line">And only a couple of them have made it to the page.</span><span class="lb-poem__line">They’re bursting amidst your memory neurons like bloated fireworks,</span><span class="lb-poem__line">because you feel like they’d starve if you wrote them on stickies.</span><span class="lb-poem__line">The one you wrote, the one you fed on midnight revelations and famed rambling placations.</span><span class="lb-poem__line">That one, the first child, who took your pen for more years than the main character spent</span><span class="lb-poem__line">running around, getting into trouble, and finding themselves.</span><span class="lb-poem__line">You packed it up, made its lunch, sent it off to its first day in the wide world, and then…</span><span class="lb-poem__line">You waited.</span><span class="lb-poem__line">You didn’t realize the waiting would be so long.</span><span class="lb-poem__line">Certainly it meant each word, each chapter, was being held with the same care with which</span><span class="lb-poem__line">you’d placed them upon their page, and ripped them up, and wrote them again.</span><span class="lb-poem__line">Or, it could be sitting on timeout amongst a stack of its peers, collecting dust.</span></p>
+        <p class="lb-poem__stanza"><span class="lb-poem__line">Well, they probably cared, they likely read each and every word,</span><span class="lb-poem__line">but you received returned your child long awaited only to hear the news that:</span><span class="lb-poem__line">There was no news.</span><span class="lb-poem__line">It flopped.</span></p>
+        <p class="lb-poem__stanza"><span class="lb-poem__line">In all the adventures it doesn’t happen like this.</span><span class="lb-poem__line">Hearing a knock, but encountering lostness just after stepping out the door.</span><span class="lb-poem__line">Usually the adventurer has a dragon they must vanquish,</span><span class="lb-poem__line">and dragons tend to make their whereabouts all to obvious.</span><span class="lb-poem__line">But, what if everyone is trying to conquer dragons, all at once?</span><span class="lb-poem__line">What if they’ve been at it for years, and years, and years?</span><span class="lb-poem__line">What if… what if there isn’t one left for you?</span><span class="lb-poem__line">So you thought you’d heard a knock at the door.</span><span class="lb-poem__line">You left your home unguarded,</span><span class="lb-poem__line">sent yourself on a quest unbidden,</span><span class="lb-poem__line">and blamed the wind that fooled you with the branch upon your eave,</span><span class="lb-poem__line">for the bruise you acquired just ten steps upon the path</span><span class="lb-poem__line">to the mountains you’ve only ever heard of-</span><span class="lb-poem__line">but never seen.</span><span class="lb-poem__line">Usually an adventurer is called.</span><span class="lb-poem__line">Were you?</span></p>
+        <p class="lb-poem__stanza"><span class="lb-poem__line">Hullo!</span><span class="lb-poem__line">Of course you were.</span><span class="lb-poem__line">I don’t mean to be so short, but the reality is, there is only one of you, none more.*</span><span class="lb-poem__line">The way you see the world.</span><span class="lb-poem__line">The hope you’ve held onto in your own dark times.</span><span class="lb-poem__line">The stories you have to tell, the real ones just as much as the tales and lore.</span><span class="lb-poem__line">Well, frankly, if you don’t tell them, no one can.</span><span class="lb-poem__line">So please don’t mistake a ‘no’ for a ‘please don’t try.’</span><span class="lb-poem__line">When it really is a fall, after a first attempt at flight!</span><span class="lb-poem__line">They say flight can only be made possible with the passage of time.</span><span class="lb-poem__line">And so perhaps your fireworks just need a little more training</span><span class="lb-poem__line">on how best to take to the skies!</span><span class="lb-poem__line">Or maybe people need special glasses, or a particular understanding of your kind of fireworks</span><span class="lb-poem__line">to see them at their height.</span><span class="lb-poem__line">Not everyone is a chemist, you know.</span><span class="lb-poem__line">Actually, now that I think about it, most people aren’t chemists.</span><span class="lb-poem__line">So maybe your dragon is simply writing until someone-</span><span class="lb-poem__line">someone just right, who can see the light in your words comes along!</span></p>
+        <p class="lb-poem__stanza"><span class="lb-poem__line">You know, I’ve met a few adventurers along this path before you.</span><span class="lb-poem__line">I bet if you peer, you could see their footprints just beyond your own.</span><span class="lb-poem__line">Along the path ahead of you, as they looked for dragons to conquer</span><span class="lb-poem__line">and places their little stories could call home.</span><span class="lb-poem__line">Maybe if you mirror them, if you just take another step somewhat like their own</span><span class="lb-poem__line">You’ll find yourself somewhere</span><span class="lb-poem__line">Somewhere beyond where you are sitting like a stone.</span></p>
+        <p class="lb-poem__stanza"><span class="lb-poem__line">Well, the morning is waning on, and I must get back to my desk,</span><span class="lb-poem__line">It looks like you are itching to get on anyway, friend!</span><span class="lb-poem__line">Must have been talking your ear off, my apologies,</span><span class="lb-poem__line">But before you’re off, would you take this pack of scribblings of mine, and give him a read,</span><span class="lb-poem__line">if you have the time?</span><span class="lb-poem__line">He’s not much, but I made him lunch!</span></p>
+        <p class="lb-poem__note">*If there happens to be more than one you, disregard this argument. I do not doubt that writings from a clone would be quite enjoyable and therefore I do not expect you to need further encouragement. Regardless, see “nurture over nature” for additional thoughts on your inherent uniqueness (and therefore necessity to write!).</p>
+      </div>
+    </div></div>
+    <div class="lb-letter__end">
+      <a class="lb-letter__back" style="margin:0" href="letters.html">&larr; All letters</a>
+      <a class="lb-btn lb-btn--secondary lb-btn--sm" href="#signup">Get the next letter</a>
+    </div>
+  </article>
   <article class="lb-letter" id="moon-gold-and-silver-horses" aria-labelledby="moon-gold-and-silver-horses-title">
     <a class="lb-letter__back" href="letters.html">&larr; All letters</a>
     <div class="lb-letter-cover">
