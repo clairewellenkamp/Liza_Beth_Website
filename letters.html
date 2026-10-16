@@ -374,7 +374,8 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
 .lb-header__inner{max-width:var(--container);margin:0 auto;display:flex;align-items:center;gap:var(--space-5);flex-wrap:wrap}
 .lb-nav{display:flex;align-items:center;gap:var(--space-5);margin-left:auto;flex-wrap:wrap}
 .lb-nav__link{font-family:var(--font-body);font-weight:var(--weight-bold);font-size:var(--size-ui);letter-spacing:var(--tracking-ui);color:var(--text-soft);text-decoration:none;padding-bottom:var(--space-1);border-bottom:2px solid transparent;transition:var(--transition-control)}
-.lb-nav__link:hover{color:var(--text)}
+/* page names glow gold on hover */
+.lb-nav__link:hover,.lb-nav__link:focus-visible{color:var(--text);border-bottom-color:var(--gold);text-shadow:0 0 6px var(--gold),0 0 14px color-mix(in srgb,var(--gold) 70%,transparent),0 0 24px color-mix(in srgb,var(--gold) 45%,transparent);outline:none}
 .lb-nav__link[aria-current="page"]{color:var(--text);border-bottom-color:var(--gilt)}
 
 /* ---- Page head ------------------------------------------------------- */

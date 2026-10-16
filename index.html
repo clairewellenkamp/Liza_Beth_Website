@@ -374,7 +374,8 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
 .lb-header__inner{max-width:var(--container);margin:0 auto;display:flex;align-items:center;gap:var(--space-5);flex-wrap:wrap}
 .lb-nav{display:flex;align-items:center;gap:var(--space-5);margin-left:auto;flex-wrap:wrap}
 .lb-nav__link{font-family:var(--font-body);font-weight:var(--weight-bold);font-size:var(--size-ui);letter-spacing:var(--tracking-ui);color:var(--text-soft);text-decoration:none;padding-bottom:var(--space-1);border-bottom:2px solid transparent;transition:var(--transition-control)}
-.lb-nav__link:hover{color:var(--text)}
+/* page names glow gold on hover */
+.lb-nav__link:hover,.lb-nav__link:focus-visible{color:var(--text);border-bottom-color:var(--gold);text-shadow:0 0 6px var(--gold),0 0 14px color-mix(in srgb,var(--gold) 70%,transparent),0 0 24px color-mix(in srgb,var(--gold) 45%,transparent);outline:none}
 .lb-nav__link[aria-current="page"]{color:var(--text);border-bottom-color:var(--gilt)}
 
 /* ---- Page head ------------------------------------------------------- */
@@ -519,6 +520,17 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
 .lb-footer__fine{margin-top:var(--space-7);padding-top:var(--space-5);border-top:var(--border-hair);font-size:var(--size-caption);color:var(--text-faint)}
 .lb-footer__fine p{max-width:none;margin:0}
 
+
+.lb-defs{position:absolute;width:0;height:0;overflow:hidden}
+/* ---- Home page: the top banner in Blue Door --------------------------- */
+.lb-header--blue{background:var(--blue);border-bottom-color:var(--blue-deep)}
+.lb-header--blue .lb-lockup,.lb-header--blue .lb-wordmark{color:var(--canvas)}
+.lb-header--blue .lb-lockup .lb-mark{color:var(--canvas)}
+.lb-header--blue .lb-wordmark__sub{color:var(--canvas);opacity:.75}
+.lb-header--blue .lb-nav__link{color:var(--canvas);opacity:.88}
+.lb-header--blue .lb-nav__link[aria-current="page"]{color:var(--canvas);opacity:1}
+.lb-header--blue .lb-nav__link:hover,.lb-header--blue .lb-nav__link:focus-visible{color:var(--gold);opacity:1}
+
 /* ---- Small screens --------------------------------------------------- */
 @media (max-width:640px){
   .lb-section{padding:var(--space-8) var(--space-5)}
@@ -576,7 +588,7 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
   </defs>
 </svg>
 <a class="lb-skip" href="#main">Skip to content</a>
-<header class="lb-header">
+<header class="lb-header lb-header--blue">
   <div class="lb-header__inner">
     <a class="lb-lockup" href="index.html" aria-label="Liza Beth Books — home">
   <span class="lb-mark lb-mark--sm" role="img" aria-label="Liza Beth Books"></span>
