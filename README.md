@@ -6,7 +6,7 @@ Open `index.html` in a browser and it works — including straight off a USB sti
 | File | What's on it |
 |---|---|
 | `index.html` | Hero with the gilt lockup and arched window, three cloth-bound book nav cards, featured novel, signup — and the LB dragon |
-| `about.html` | *About Liza*, her author portrait (`liza-beth-portrait.jpg`), the LB mark, and the riddle card with its "turn off the lights" switch |
+| `about.html` | *About Liza* with her author portrait (`liza-beth-portrait.jpg`) in a gilt oval frame over the title band, and the riddle card with its "turn off the lights" switch |
 | `books.html` | *The Fall Before Flight* — cover art, back-of-book summary, **Liza's progress** bars, Chapter One |
 | `letters.html` | *Letters from Liza* — "Moon Gold and Silver Horses" under **Short stories**, signup |
 
