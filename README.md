@@ -8,7 +8,7 @@ Open `index.html` in a browser and it works — including straight off a USB sti
 | `index.html` | Hero with the gilt lockup and arched window, three cloth-bound book nav cards, featured novel, signup — and the LB dragon |
 | `about.html` | *About Liza* with her author portrait (`liza-beth-portrait.jpg`) in a gilt oval frame over the title band, her signature (`liza-beth-signature.png`), and the riddle card with its "turn off the lights" switch |
 | `books.html` | *The Fall Before Flight* — cover art, back-of-book summary, **Liza's progress** bars, Chapter One |
-| `letters.html` | *Letters from Liza* — "Moon Gold and Silver Horses" under **Short stories**, signup |
+| `letters.html` | *Letters from Liza* — "Leanie and Meanie" (from 2 Nov 2026) and "Moon Gold and Silver Horses" under **Short stories**, a Substack card, signup |
 
 Supporting files: `favicon.ico`, `favicon-32.png`, `apple-touch-icon.png`, `icon-512.png`, and
 `fall-before-flight-cover.jpg` (the rough-draft cover, used on the home and Books pages).
@@ -88,6 +88,12 @@ Each letter is two pieces in `letters.html`, and they have to share an id:
 To use a picture, put the image file next to the page and replace what is inside the cover
 with `<img src="your-image.jpg" alt="what the picture shows">`. It is cropped to fit
 automatically.
+
+**Scheduling a letter.** Add `data-publish="YYYY-MM-DD"` to both the card and the
+`<article>`, and they stay hidden until that date (in the reader's own time zone), then appear
+on their own. "Leanie and Meanie" uses this for 2 November 2026. The "… letters so far" count
+updates itself. (The text is in the page's source before then, so anyone viewing the source
+could read it early.)
 
 For a new kind of letter, copy a whole `<div class="lb-letters__group">` and rename its
 heading. The "One letter so far" count is plain text, so update it by hand.

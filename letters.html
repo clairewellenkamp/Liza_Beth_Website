@@ -526,6 +526,13 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
   .lb-letter-card .lb-letter-cover{aspect-ratio:16/9;min-height:0}
   .lb-letter-card__body{padding:var(--space-5)}
 }
+.lb-substack{display:flex;align-items:center;gap:var(--space-5);flex-wrap:wrap;background:var(--canvas);border:var(--border-hair);border-top:3px solid var(--blue);border-radius:var(--radius-card);box-shadow:var(--shadow-2);padding:var(--space-6);text-decoration:none;color:inherit;
+  transition:box-shadow var(--dur) var(--ease),transform var(--dur) var(--ease),border-color var(--dur) var(--ease)}
+.lb-substack:hover{box-shadow:var(--shadow-3);transform:translateY(-2px);border-color:var(--gilt);border-top-color:var(--blue)}
+.lb-substack:focus-visible{outline:2px solid var(--focus-ring);outline-offset:3px}
+.lb-substack__icon{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:var(--surface);border:var(--border-hair);color:var(--blue);flex:none}
+.lb-substack__body{display:flex;flex-direction:column;gap:var(--space-1);flex:1 1 220px}
+.lb-substack__name{font-family:var(--font-display);font-weight:var(--weight-display);font-size:var(--size-h3);line-height:1.2;color:var(--text)}
 /* the letter itself */
 .lb-letter{max-width:var(--container-prose);margin:0 auto}
 .lb-letter__back{display:inline-flex;gap:var(--space-2);align-items:center;font-family:var(--font-body);font-weight:var(--weight-bold);font-size:var(--size-ui);letter-spacing:var(--tracking-ui);color:var(--link);text-decoration:none;margin-bottom:var(--space-6)}
@@ -624,6 +631,17 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
     <div class="lb-letters__group">
       <div class="lb-letters__head"><h2>Short stories</h2><span class="lb-letters__count">One letter so far</span></div>
       <div class="lb-letters__list">
+      <a class="lb-letter-card" href="#leanie-and-meanie" data-letter="leanie-and-meanie" data-publish="2026-11-02">
+        <span class="lb-letter-cover">
+          <img src="leanie-and-meanie.jpg" style="object-position:50% 45%" width="1200" height="1600" alt="A cobbled footbridge strewn with wet autumn leaves leads between stone railings and glowing street lamps toward an ornate old building at night, framed by dark trees">
+        </span>
+        <span class="lb-letter-card__body">
+          <span class="lb-letter-card__meta"><span class="lb-card__eyebrow">Short story</span><span class="lb-letter-card__time">2 min read</span></span>
+          <span class="lb-letter-card__title">Leanie and Meanie</span>
+          <span class="lb-letter-card__excerpt">They didn’t play the Metallica song I asked for. This was all Melanie Baskervilla could think as she stood in line behind her mother at her own funeral.</span>
+          <span class="lb-letter-card__more">Read the letter &rarr;</span>
+        </span>
+      </a>
       <a class="lb-letter-card" href="#moon-gold-and-silver-horses" data-letter="moon-gold-and-silver-horses">
         <span class="lb-letter-cover">
           <img src="moon-gold-and-silver-horses.jpg" width="1200" height="800" alt="A man in a hat and a small blond girl crouch in tall grass at night, watching two glowing white horses graze beneath a full moon and desert buttes">
@@ -637,10 +655,49 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
       </a>
       </div>
     </div>
+
+    <!-- Liza on Substack -->
+    <div class="lb-letters__group">
+      <div class="lb-letters__head"><h2>Substack</h2></div>
+      <a class="lb-substack" href="https://substack.com/@lizabethwrites" target="_blank" rel="noopener">
+        <span class="lb-substack__icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26"><path fill="currentColor" d="M4 3h16v2.6H4zm0 4.7h16v2.6H4zM4 12.4h16V22l-8-4.5L4 22z"/></svg></span>
+        <span class="lb-substack__body">
+          <span class="lb-card__eyebrow">Letters from Liza, on Substack</span>
+          <span class="lb-substack__name">@lizabethwrites</span>
+        </span>
+        <span class="lb-btn lb-btn--primary lb-btn--sm lb-substack__btn">Follow on Substack &rarr;</span>
+      </a>
+    </div>
   </div>
 </section>
 
 <section class="lb-section" id="letters-read">
+  <article class="lb-letter" id="leanie-and-meanie" aria-labelledby="leanie-and-meanie-title" data-publish="2026-11-02">
+    <a class="lb-letter__back" href="letters.html">&larr; All letters</a>
+    <div class="lb-letter-cover">
+      <img src="leanie-and-meanie.jpg" style="object-position:50% 45%" width="1200" height="1600" alt="A cobbled footbridge strewn with wet autumn leaves leads between stone railings and glowing street lamps toward an ornate old building at night, framed by dark trees" loading="lazy">
+    </div>
+    <span class="lb-card__eyebrow">Short story</span>
+    <h2 class="lb-letter__title" id="leanie-and-meanie-title">Leanie and Meanie</h2>
+    <p class="lb-letter__time">2 min read</p>
+    <div class="lb-prose lb-prose--story">
+<p>They didn’t play the Metallica song I asked for.</p>
+<p>This was all Melanie Baskervilla could think as she stood in line behind her mother at her own funeral.</p>
+<p>The service had been nice. Too nice. Melanie thought something got caught in her eyes about half way through. Not tears of course. Maybe dust. As the line shortened and she approached the casket, she wondered whether the same dust from the sanctuary had found her eyes again.</p>
+<p>But no one else had seemed to get dust in their eyes. Not even her stone silent mother. She was next in line now, her thin and elegant step approaching the polished red casket - which was supposed to be black- and moving much too quickly past to the cheese and crackers in the adjacent room.</p>
+<p>Melanie, or Meanie, as the rest of her family called her, had been to enough viewings to know something was off. She’d been to some for her family, but more for strangers.</p>
+<p>She’d never seen someone pass by so fast.</p>
+<p>She was next in line and tried to quicken her pace. If her own mother could move past that quickly, surely she could manage. But it was no use. As soon as she saw the face, she froze.</p>
+<p>They’d given her makeup. Not the eyeliner and black lipstick Meanie usually sported, but blush and mascara and…</p>
+<p>The dust was definitely from this exact spot. The face Meanie had looked at her whole life blurred as she furiously blinked her eyes, trying not to ruin the terrible attempt at eyeshadow she had put on herself that morning. You’d think that after two weeks she’d have figured out how to put pink powder on her eyeballs.</p>
+<p>Heavy hands descended upon her shoulders. Her brother was behind her. He lightly squeezed his gloved fingers as he stood next to her, both of them looking at the face together. Meanie broke her eye contact with the corpse, shrugged off his grasp, and made the lead in her shoes shuffle across the green and red threaded carpet to follow her mother.</p>
+<p>It was supposed to be her, Melanie, in that casket. She wasn’t supposed to have looked so much like… who she actually was. It wasn’t supposed to look so much like her sister.</p>
+    </div>
+    <div class="lb-letter__end">
+      <a class="lb-letter__back" style="margin:0" href="letters.html">&larr; All letters</a>
+      <a class="lb-btn lb-btn--secondary lb-btn--sm" href="#signup">Get the next letter</a>
+    </div>
+  </article>
   <article class="lb-letter" id="a-letter-to-a-writer-in-waiting" aria-labelledby="a-letter-to-a-writer-in-waiting-title">
     <a class="lb-letter__back" href="letters.html">&larr; All letters</a>
     <div class="lb-letter-cover">
@@ -810,6 +867,17 @@ blockquote{font-family:var(--font-subtitle);font-style:italic;font-weight:var(--
 })();
 
 
+// Letters: show the index of cards, or one letter when the address ends in #its-id.
+// A card or letter with data-publish="YYYY-MM-DD" stays hidden until that date (reader's local time).
+(function () {
+  var now = new Date(), today = now.getFullYear() + '-' + ('0' + (now.getMonth() + 1)).slice(-2) + '-' + ('0' + now.getDate()).slice(-2);
+  document.querySelectorAll('[data-publish]').forEach(function (el) { if (el.getAttribute('data-publish') > today) el.remove(); });
+  var words = ['No letters yet', 'One letter so far', 'Two letters so far', 'Three letters so far', 'Four letters so far', 'Five letters so far'];
+  document.querySelectorAll('.lb-letters__group').forEach(function (g) {
+    var c = g.querySelector('.lb-letters__count'); if (!c) return;
+    var n = g.querySelectorAll('.lb-letter-card').length; c.textContent = words[n] || (n + ' letters so far');
+  });
+})();
 // Letters: show the index of cards, or one letter when the address ends in #its-id.
 (function () {
   var index = document.getElementById('letters-index'), read = document.getElementById('letters-read');
